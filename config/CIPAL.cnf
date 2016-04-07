@@ -1,0 +1,11 @@
+GRUPO=/home/f/tp/planauto=f=mar abr 5 15:23:53 ART 2016
+BINDIR=/home/f/tp/planauto/binarios=f=mar abr 5 15:23:53 ART 2016
+MAEDIR=/home/f/tp/planauto/maestros=f=mar abr 5 15:23:53 ART 2016
+ARRDIR=/home/f/tp/planauto/arribados=f=mar abr 5 15:23:53 ART 2016
+OKDIR=/home/f/tp/planauto/aceptados=f=mar abr 5 15:23:53 ART 2016
+PROCDIR=/home/f/tp/planauto/procesados=f=mar abr 5 15:23:53 ART 2016
+INFODIR=/home/f/tp/planauto/informes=f=mar abr 5 15:23:53 ART 2016
+LOGDIR=/home/f/tp/planauto/bitacoras=f=mar abr 5 15:23:53 ART 2016
+NOKDIR=/home/f/tp/planauto/rechazados=f=mar abr 5 15:23:53 ART 2016
+LOGSIZE=30=f=mar abr 5 15:23:53 ART 2016
+SLEEPTIME=1=f=mar abr 5 15:23:53 ART 2016
