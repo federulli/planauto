@@ -8,6 +8,8 @@ if [ $# -lt 1 ]; then
 	exit
 fi
 
+nombre=`echo $1 | sed "s/\([^\.]*\).*/\1.sh/"`
+
 ground="F"
 if [ $# -eq 2 ]; then
 	if [ $2 != "B" ] && [ $2 != "F" ]; then
@@ -23,19 +25,21 @@ if [ "$AMBIENTE_INICIALIZADO" != "SI" ]; then
 fi
 
 #verifico que el proceso no se encuentre en ejecucion
-if ! [ -z `pgrep -f  "$1.sh"` ]; then
+
+
+if ! [ -z `pidof -x $nombre` ]; then
 	echo "El proceso ya se encuentra en ejecucion"
 	exit
 fi
 
-if [ -f "$BINDIR/$1.sh" ]; then
+if [ -f "$BINDIR/$nombre" ]; then
 	if [ $ground == "B" ]; then
-		$BINDIR/$1.sh &
+		$BINDIR/$nombre &
 	else
-		$BINDIR/$1.sh
+		$BINDIR/$nombre
 	fi
 else
-	echo "No se encuentra el ejecutable"
+	echo "No se encuentra el ejecutable en $BINDIR"
 fi
 		
 		
