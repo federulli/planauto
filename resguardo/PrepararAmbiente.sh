@@ -16,17 +16,6 @@ function verificar_permisos_ejecucion {
 	return 0 
 }
 
-function copiar_de_directorio_de_resguardo {
-	backupdir=`cat "../config/CIPAL.cnf" | grep "^BACKUPDIR" | sed "s/^BACKUPDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
-
-	if [ ! -f $backupdir/$1 ]; then
-             echo "$1 no se encuentra en el directorio de resguardo $backupdir" 
-             return 1
-        fi
-	cp -n $backupdir/$1 $2
-	echo $1 restaurado
-	return 0
-}
 
 function verificar_integridad_instalacion {
 	old_ifs=$IFS
@@ -35,27 +24,17 @@ function verificar_integridad_instalacion {
         for file in $files; do
                 if ! [ -f "$BINDIR/$file" ]; then
                         echo No se encuentra el archivo: $file
-			echo Se intentara copiar desde el directorio de resguardo 
-			copiar_de_directorio_de_resguardo $file "$BINDIR"
-                        if [ $? -eq 1 ]; then
-				echo No se puede realizar la copia
-				IFS=$old_ifs
-	               		return 1
-			fi
+                        IFS=$old_ifs
+                        return 1
                 fi
         done
 	files=`cat "../config/CIPAL.cnf" | grep "^MAEFILES" | sed "s/^MAEFILES=\([^=]*\)=[^=]*=[^=]*/\1/"`
         for file in $files; do
                 if ! [ -f "$MAEDIR/$file" ]; then
                         echo No se encuentra el archivo: $file
-                        echo Se intentara copiar desde el directorio de resguardo 
-                        copiar_de_directorio_de_resguardo $file "$MAEDIR"
-                        if [ $? -eq 1 ]; then
-                                echo No se puede realizar la copia
-                                IFS=$old_ifs
-                                return 1
-                        fi
-		 fi
+                        IFS=$old_ifs
+                        return 1
+                fi
         done
         IFS=$old_ifs
 	return 0
