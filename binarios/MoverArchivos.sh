@@ -19,11 +19,16 @@ if [ ! -f $origen ]; then
 	exit
 fi
 
-#saco el nombre del archivo para ver si existe el directorio
-directorio_destino=`echo $destino | sed "s-\([^/]*/*\)\([^/]*$\)-\1-g"`
-if [ ! -d $directorio_destino ]; then
-	$BINDIR/GrabarBitacora.sh "$comando" "No existe el directorio destino" "ERR"
-	exit
+
+if [ ! -d $destino ]; then
+	#saco el nombre del archivo para ver si existe el directorio
+	directorio_destino=`echo $destino | sed "s-\([^/]*/*\)\([^/]*$\)-\1-g"`
+	if [ ! -d $directorio_destino ]; then
+		$BINDIR/GrabarBitacora.sh "$comando" "No existe el directorio destino" "ERR"
+		exit
+	fi
+else
+	directorio_destino=$destino
 fi
 
 if [ ! -f $destino ]

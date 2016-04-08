@@ -45,7 +45,7 @@ function verificar_permisos_lectura {
 	old_ifs=$IFS
         IFS=$'\n'
         # Permisos de lectura
-	files=`ls -l $MAEDIR | grep "^[-wrx]\{9\}[^r]" | sed "s/^.* \([^\ ]*\)$/\1/"`
+	files=`ls -l $MAEDIR | grep "^[-rwx]\{7\}[\-]" | sed "s/^.* \([^\ ]*\)$/\1/"`
 	for file in $files; do
                 if ! [ -z "`chmod +r "$MAEDIR/$file" 2>&1`" ]; then
                         echo No se pudo cambiar los permisos de lectura del archivo: $file
@@ -61,9 +61,9 @@ function verificar_permisos_escritura {
 	old_ifs=$IFS
         IFS=$'\n'
         # Permisos de escritura
-        files=`ls -l $MAEDIR | grep "^[-wrx]\{9\}[^w]" | sed "s/^.* \([^\ ]*\)$/\1/"`
+        files=`ls -l $MAEDIR | grep "^[-rwx]\{5\}[\-]" | sed "s/^.* \([^\ ]*\)$/\1/"`
         for file in $files; do
-                if ! [ -z "`chmod +r "$MAEDIR/$file" 2>&1`" ]; then
+                if ! [ -z "`chmod +w "$MAEDIR/$file" 2>&1`" ]; then
                         echo No se pudo cambiar los permisos de escritura del archivo: $file
                         IFS=$old_ifs
                         return 1
@@ -148,7 +148,8 @@ function arrancar_recibir_ofertas {
 			mensaje="Recibir ofertas corriendo bajo el no.: `pgrep -f  RecibirOfertas.sh`"
 			echo $mensaje
 		else
-			echo Explicar como arrancarlo con lanzar proceso
+			echo "Para ejecutar RecibirOfertas:"
+			echo "\$ $BINDIR/LanzarProceso.sh RecibirOfertas B"
 	fi
 	return 0
 }
