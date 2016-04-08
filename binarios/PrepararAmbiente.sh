@@ -1,4 +1,5 @@
 #!/bin/bash
+
 function verificar_permisos_ejecucion {
 	old_ifs=$IFS
 	IFS=$'\n'
@@ -6,7 +7,7 @@ function verificar_permisos_ejecucion {
 	
 	for file in $files; do
 		if ! [ -z "`chmod +x "$file" 2>&1`" ]; then
-			echo No se pudo cambiar los permisos del archivo: $file
+			echo No se pudo cambiar los permisos ejecucion del archivo: $file
 			IFS=$old_ifs
 			return 1
 		 fi
@@ -17,11 +18,70 @@ function verificar_permisos_ejecucion {
 
 
 function verificar_integridad_instalacion {
+	old_ifs=$IFS
+        IFS=','
+        files=`cat "../config/CIPAL.cnf" | grep "^BINFILES" | sed "s/^BINFILES=\([^=]*\)=[^=]*=[^=]*/\1/"`
+        for file in $files; do
+                if ! [ -f "$BINDIR/$file" ]; then
+                        echo No se encuentra el archivo: $file
+                        IFS=$old_ifs
+                        return 1
+                fi
+        done
+	files=`cat "../config/CIPAL.cnf" | grep "^MAEFILES" | sed "s/^MAEFILES=\([^=]*\)=[^=]*=[^=]*/\1/"`
+        for file in $files; do
+                if ! [ -f "$MAEDIR/$file" ]; then
+                        echo No se encuentra el archivo: $file
+                        IFS=$old_ifs
+                        return 1
+                fi
+        done
+        IFS=$old_ifs
 	return 0
 }
 
 
+function verificar_permisos_lectura {
+	old_ifs=$IFS
+        IFS=$'\n'
+        # Permisos de lectura
+	files=`ls -l $MAEDIR | grep "^[-wrx]\{9\}[^r]" | sed "s/^.* \([^\ ]*\)$/\1/"`
+	for file in $files; do
+                if ! [ -z "`chmod +r "$MAEDIR/$file" 2>&1`" ]; then
+                        echo No se pudo cambiar los permisos de lectura del archivo: $file
+                        IFS=$old_ifs
+                        return 1
+                 fi
+        done
+        IFS=$old_ifs
+	return 0
+}
+
+function verificar_permisos_escritura {
+	old_ifs=$IFS
+        IFS=$'\n'
+        # Permisos de escritura
+        files=`ls -l $MAEDIR | grep "^[-wrx]\{9\}[^w]" | sed "s/^.* \([^\ ]*\)$/\1/"`
+        for file in $files; do
+                if ! [ -z "`chmod +r "$MAEDIR/$file" 2>&1`" ]; then
+                        echo No se pudo cambiar los permisos de escritura del archivo: $file
+                        IFS=$old_ifs
+                        return 1
+                 fi
+        done
+        IFS=$old_ifs
+        return 0
+}
+
 function verificar_permisos_maestros {
+	verificar_permisos_lectura
+	if (( $? == 1 )); then 
+		return 1
+	fi
+	verificar_permisos_escritura
+	if (( $? == 1 )); then
+                return 1
+        fi
 	return 0
 }
 

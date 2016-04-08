@@ -1,24 +1,5 @@
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-Log Excedido
-f-jue abr 7 15:33:08 ART 2016-PrepararAmbiente-INFO-SLEEPTIME=1 f-jue abr 7 15:33:08 ART 2016-PrepararAmbiente-INFO-Estado del Sistema: INICIALIZADO
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-BINDIR=/home/f/tp/planauto/binarios
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-MAEDIR=/home/f/tp/planauto/maestros
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-ARRDIR=/home/f/tp/planauto/arribados
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-OKDIR=/home/f/tp/planauto/aceptados
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-PROCDIR=/home/f/tp/planauto/procesados
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-INFODIR=/home/f/tp/planauto/informes
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-LOGDIR=/home/f/tp/planauto/bitacoras
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-NOKDIR=/home/f/tp/planauto/rechazados
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-LOGSIZE=30
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-SLEEPTIME=1
-f-jue abr  7 15:42:14 ART 2016-PrepararAmbiente-INFO-Estado del Sistema: INICIALIZADO
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-BINDIR=/home/f/tp/planauto/binarios
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-MAEDIR=/home/f/tp/planauto/maestros
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-ARRDIR=/home/f/tp/planauto/arribados
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-OKDIR=/home/f/tp/planauto/aceptados
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-PROCDIR=/home/f/tp/planauto/procesados
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-INFODIR=/home/f/tp/planauto/informes
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-LOGDIR=/home/f/tp/planauto/bitacoras
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-NOKDIR=/home/f/tp/planauto/rechazados
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-LOGSIZE=30
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-SLEEPTIME=1
-f-jue abr  7 15:44:58 ART 2016-PrepararAmbiente-INFO-Estado del Sistema: INICIALIZADO
+f-vie abr  8 12:29:01 ART 2016-PrepararAmbiente-INFO-Log Excedido
+f-vie abr 8 12:29:01 ART 2016-PrepararAmbiente-INFO-NOKDIR=/home/f/tpsisop/planauto/rechazados f-vie abr 8 12:29:01 ART 2016-PrepararAmbiente-INFO-LOGSIZE=10
+f-vie abr  8 12:29:01 ART 2016-PrepararAmbiente-INFO-SLEEPTIME=1
+f-vie abr  8 12:29:01 ART 2016-PrepararAmbiente-INFO-Estado del Sistema: INICIALIZADO
+f-vie abr  8 12:29:09 ART 2016-PrepararAmbiente-ERR-Ambiente ya inicializado
