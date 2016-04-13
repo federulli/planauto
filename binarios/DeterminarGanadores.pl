@@ -16,7 +16,6 @@ sub resultado_general_sorteo {
 	my %orden_sorteo_h;
 	while ($linea=<ENTRADA>) {	
 		$linea =~ s/\D*(\d*)\D*(\d*)/\2 \1/;
-		print "$linea\n";
 		@orden_sorteo = split(" ", $linea);
 		$orden_sorteo_h{@orden_sorteo[0]} = @orden_sorteo[1]
 	}
@@ -27,6 +26,8 @@ sub resultado_general_sorteo {
 			print "Nro. de Sorteo $a, le correspondió al número de orden $orden_sorteo_h{$a}\n";
 		}
 	}
+	close(ENTRADA);
+	close(PROCDIR);
 	return 0;
 }
 
