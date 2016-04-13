@@ -7,12 +7,26 @@ sub resultado_general_sorteo {
 	@id = @_[0];
 	opendir(PROCDIR, $ENV{'PROCDIR'});
 	@files = readdir(PROCDIR); 
-	@files = grep /^@id[0]/, @files;
+	@files = grep /^@id[0]/, @files;	
 	if ( scalar @files < 1) {
 		print "No hay sorteo con id @id[0]";
 		return 1;
 	}
-	#open (ENTRADA,"<"@files[0]")
+	open (ENTRADA,"<$ENV{'PROCDIR'}/@files[0]");
+	my %orden_sorteo_h;
+	while ($linea=<ENTRADA>) {	
+		$linea =~ s/\D*(\d*)\D*(\d*)/\2 \1/;
+		print "$linea\n";
+		@orden_sorteo = split(" ", $linea);
+		$orden_sorteo_h{@orden_sorteo[0]} = @orden_sorteo[1]
+	}
+	@keys = keys %orden_sorteo_h;
+	@sorted_keys = sort(@keys);
+	foreach $a (@sorted_keys) {
+		if ( $a ne "" ) {
+			print "Nro. de Sorteo $a, le correspondió al número de orden $orden_sorteo_h{$a}\n";
+		}
+	}
 	return 0;
 }
 
