@@ -1,17 +1,57 @@
 #!/bin/bash
 
-function validarNombre {
-echo "esta es mi variable $1"
-	sucursal=`echo $1 | sed "s-\([^_]*\)_\(.*\)-\1-" ` 
-	echo $sucursal
-	segunda=`echo $1 | sed "s-\([^_]*\)_\(.*\)-\2-"`
-	echo $segunda 
-
+function rechazarArchivo {
+	#Si no existe la carpeta de rechazados la creo
+	if [ ! -d "$NOKDIR" ]; then
+		mkdir "$NOKDIR"
+	fi
+				
+	$BINDIR/MoverArchivos.sh "$ARRIDIR/$1" "$NOKDIR" "RecibirOfertas"
 }
 
-function validarExtension {
+function aceptarArchivo {
+	#Si no existe la carpeta de aceptados la creo
+	if [ ! -d "$OKDIR" ]; then
+		mkdir "$OKDIR"
+	fi
+	
+	$BINDIR/MoverArchivos.sh "$ARRIDIR/$1" "$OKDIR" "RecibirOfertas"
+}
+
+function validarFecha {
+	fecha=`echo $1 | sed "s-\([^_]*\)_\(.*\)-\2-"`
+	echo $fecha 
+}
+
+function validarConcesionario {
+	encontrado=false	
+	concesionario=`echo $1 | sed "s-\([^_]*\)_\(.*\)-\1-"` 	
+	cantidadDeConcesionarios=`echo $2 | wc "-w"`
+	i="0"
+
+	while (( "$encontrado" != true )) || (( $i < $cantidadDeConcesionarios )); do
+		for id in $2; do
+			if [ $id = $concesionario ]; then
+				encontrado=true
+			fi
+			i=$[$i+1]
+		done
+	done 
+
+
+	if [ "$encontrado" = true ]; then
+		#validarFecha $1 #$1=Nombre de fichero
+		echo "Lo encontre!"
+		return 0 #esto se tiene que borrar cuando este validar fecha
+	else
+		return 1
+	fi	
+}
+
+function validar {
+	#Hago la validacion por partes, primero me encargo de la extension
 	if [ $1 = "csv" ]; then
-		return 0
+		validarConcesionario "$2" "$3" #$2=Nombre de fichero, $3=Lista de concesionarios
 	else
 		return 1
 	fi
@@ -22,26 +62,25 @@ function recorrerArchivos {
 	for file in $files ; do
 		extension_fichero=`echo $file | sed "s-[^.]*\.\(.*\)-\1-"`
 		nombre_fichero=`echo $file | sed "s-\([^.]*\)\.\(.*\)-\1-"`
-		validarExtension $extension_fichero $nombre_fichero
+		validar $extension_fichero $nombre_fichero "$1"
 		
 		if [ $? = 0 ]; then
-			validarNombre $nombre_fichero
-		else	
-			#Si no es un archivo de extension valida lo muevo			
-			$BINDIR/MoverArchivos.sh "$ARRIDIR/$file" "$NOKDIR" "RecibirOfertas"
+			aceptarArchivo $file
+				
+		else
+			rechazarArchivo $file
 		fi
-
-		#test
-		echo $extension_fichero
-		echo $nombre_fichero
        	done
-
 }
 
 start(){
-	recorrerArchivos
-	sleep 10
-	start
+	#Creo la lista de concesionarios
+	lista=`cat $MAEDIR/concesionarios.csv | grep "^[^;]*;[^;]*$" | sed "s-[^;]*;\(.*\)-\1-"`
+
+	recorrerArchivos "$lista"
+	
+	#sleep 10
+	#start
 
 	RETVAL=$?
 	echo
