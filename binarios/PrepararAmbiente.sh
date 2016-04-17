@@ -123,8 +123,8 @@ function inicializar_variables {
 	export BINDIR
 	MAEDIR=`cat "../config/CIPAL.cnf" | grep "^MAEDIR" | sed "s/^MAEDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
 	export MAEDIR
-	ARRDIR=`cat "../config/CIPAL.cnf" | grep "^ARRDIR" | sed "s/^ARRDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
-	export ARRDIR
+	ARRIDIR=`cat "../config/CIPAL.cnf" | grep "^ARRIDIR" | sed "s/^ARRIDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	export ARRIDIR
 	OKDIR=`cat "../config/CIPAL.cnf" | grep "^OKDIR" | sed "s/^OKDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export OKDIR
 	PROCDIR=`cat "../config/CIPAL.cnf" | grep "^PROCDIR" | sed "s/^PROCDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
@@ -145,7 +145,7 @@ function inicializar_variables {
 function loguear_valor_variables {
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "BINDIR=$BINDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "MAEDIR=$MAEDIR"
-	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "ARRDIR=$ARRDIR"
+	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "ARRIDIR=$ARRIDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "OKDIR=$OKDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "PROCDIR=$PROCDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "INFODIR=$INFODIR"
@@ -165,7 +165,7 @@ function arrancar_recibir_ofertas {
 		read arrancar
 	done
 	if [ $arrancar == "si" ]; then
-			$BINDIR/LanzarProceso.sh "RecibirOfertas" "B"
+			$BINDIR/LanzarProceso.sh "RecibirOfertas.sh start" "B"
 			mensaje="Recibir ofertas corriendo bajo el no.: `pgrep -f  RecibirOfertas.sh`"
 			echo $mensaje
 		else

@@ -2,7 +2,7 @@
 echo GRUPO=`pwd`=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo BINDIR=`pwd`/binarios=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo MAEDIR=`pwd`/maestros=$USER=`date`>>`pwd`/config/CIPAL.cnf
-echo ARRDIR=`pwd`/arribados=$USER=`date`>>`pwd`/config/CIPAL.cnf
+echo ARRIDIR=`pwd`/arribados=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo OKDIR=`pwd`/aceptados=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo PROCDIR=`pwd`/procesados=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo INFODIR=`pwd`/informes=$USER=`date`>>`pwd`/config/CIPAL.cnf

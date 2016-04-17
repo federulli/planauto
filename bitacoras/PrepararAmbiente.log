@@ -1,3 +1,10 @@
-f-vie abr  8 16:23:04 ART 2016-PrepararAmbiente-INFO-Log Excedido
-f-vie abr 8 16:23:04 ART 2016-PrepararAmbiente-INFO-LOGSIZE=10 f-vie abr 8 16:23:04 ART 2016-PrepararAmbiente-INFO-SLEEPTIME=1
-f-vie abr  8 16:23:04 ART 2016-PrepararAmbiente-INFO-Estado del Sistema: INICIALIZADO
+desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-Log Excedido
+desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-MAEDIR=/home/desuque/Documentos/planauto-master/maestros desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-ARRIDIR=/home/desuque/Documentos/planauto-master/arribados
+desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-OKDIR=/home/desuque/Documentos/planauto-master/aceptados
+desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-PROCDIR=/home/desuque/Documentos/planauto-master/procesados
+desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-INFODIR=/home/desuque/Documentos/planauto-master/informes
+desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-LOGDIR=/home/desuque/Documentos/planauto-master/bitacoras
+desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-NOKDIR=/home/desuque/Documentos/planauto-master/rechazados
+desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-LOGSIZE=10
+desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-SLEEPTIME=1
+desuque-dom abr 17 01:07:44 ART 2016-PrepararAmbiente-INFO-Estado del Sistema: INICIALIZADO
