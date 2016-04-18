@@ -32,6 +32,8 @@ do
 
 done 
 
+# Agrego setup.sh
+cp setup.sh ./GRUPO04/
 # Creo el archivo instalador.tgz
 
 if [ -d $salida ]; then
