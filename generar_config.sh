@@ -1,3 +1,6 @@
+if [ ! -d `pwd`/config ]; then
+	mkdir `pwd`/config
+fi
 >`pwd`/config/CIPAL.cnf
 echo GRUPO=`pwd`=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo BINDIR=`pwd`/binarios=$USER=`date`>>`pwd`/config/CIPAL.cnf

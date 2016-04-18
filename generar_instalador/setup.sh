@@ -7,7 +7,9 @@ for targzfile in `ls | grep "^[^.]*.tar.gz$"`; do
 	rm $targzfile
 done
 
-for gzfile in `ls | grep "^[^.]*.gz$"`; do
-	echo $gzfile
-done
+gzip -d *.gz
+
+chmod +x generar_config.sh
+./generar_config.sh
+ 
 
