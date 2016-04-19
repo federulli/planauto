@@ -10,17 +10,43 @@ function rechazarArchivo {
 }
 
 function aceptarArchivo {
-	#Si no existe la carpeta de aceptados la creo
-	if [ ! -d "$OKDIR" ]; then
-		mkdir "$OKDIR"
-	fi
-	
-	$BINDIR/MoverArchivos.sh "$ARRIDIR/$1" "$OKDIR" "RecibirOfertas"
+	#Si el archivo esta vacio, de cualquier forma se rechaza
+	if [ -s $ARRIDIR/$1 ]; then
+
+		#Si no existe la carpeta de aceptados la creo
+		if [ ! -d "$OKDIR" ]; then
+			mkdir "$OKDIR"
+		fi
+
+		$BINDIR/MoverArchivos.sh "$ARRIDIR/$1" "$OKDIR" "RecibirOfertas"
+	else
+		rechazarArchivo $1
+	fi		
 }
 
 function validarFecha {
+	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
+	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
+	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
+	ultimaAdjudicacion="19910514"
+	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
+	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
+	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
+
 	fecha=`echo $1 | sed "s-\([^_]*\)_\(.*\)-\2-"`
-	echo $fecha 
+
+	date --date $fecha >/dev/null 2>&1 #Oculto salida estandar y error
+	if [ $? = 0 ]; then
+		fechaDeHoy=`date +%Y%m%d`
+		calculoDiaActual=$[$fechaDeHoy-$fecha]
+		calculoDiaAdjudicacion=$[$fecha-$ultimaAdjudicacion]
+		if [ $calculoDiaActual -ge "0" ] && [ $calculoDiaAdjudicacion -gt "0" ]; then #-ge: mayor o igual a...
+			return 0
+		fi
+	else
+		#Fecha invalida		
+		return 1
+	fi
 }
 
 function validarConcesionario {
@@ -40,10 +66,9 @@ function validarConcesionario {
 
 
 	if [ "$encontrado" = true ]; then
-		#validarFecha $1 #$1=Nombre de fichero
-		echo "Lo encontre!"
-		return 0 #esto se tiene que borrar cuando este validar fecha
+		validarFecha $1 #$1=Nombre de fichero
 	else
+		#No existe concesionario
 		return 1
 	fi	
 }
@@ -53,6 +78,7 @@ function validar {
 	if [ $1 = "csv" ]; then
 		validarConcesionario "$2" "$3" #$2=Nombre de fichero, $3=Lista de concesionarios
 	else
+		#Extension invalida
 		return 1
 	fi
 }
@@ -78,12 +104,10 @@ start(){
 	lista=`cat $MAEDIR/concesionarios.csv | grep "^[^;]*;[^;]*$" | sed "s-[^;]*;\(.*\)-\1-"`
 
 	recorrerArchivos "$lista"
-	
-	#sleep 10
-	#start
+	sleep 10
+	start
 
 	RETVAL=$?
-	echo
 }
  
 stop(){
