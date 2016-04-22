@@ -99,20 +99,36 @@ function recorrerArchivos {
        	done
 }
 
+function verificarNovedadesPendientes {
+	#Si la carpeta tiene archivos sin procesar, invoco ProcesarOfertas.sh
+	cantFicheros=`ls "$OKDIR" | wc -l`
+
+	if [ $cantFicheros != "0" ]; then
+			$BINDIR/LanzarProceso.sh "ProcesarOfertas" "F"
+	fi
+}
+
 start(){
 	#Creo la lista de concesionarios
 	lista=`cat $MAEDIR/concesionarios.csv | grep "^[^;]*;[^;]*$" | sed "s-[^;]*;\(.*\)-\1-"`
 
-	recorrerArchivos "$lista"
+	#Si no existe la carpeta de arribados la creo
+	if [ ! -d "$ARRIDIR" ]; then
+			mkdir "$ARRIDIR"
+	fi
 
-	#EL SLEEP TIME DEBE SER UNA VARIABLE DECLARADA EN SETEARAMBIENTE
-	#EL SLEEP TIME DEBE SER UNA VARIABLE DECLARADA EN SETEARAMBIENTE
-	#EL SLEEP TIME DEBE SER UNA VARIABLE DECLARADA EN SETEARAMBIENTE
-	sleep 10
-	#EL SLEEP TIME DEBE SER UNA VARIABLE DECLARADA EN SETEARAMBIENTE
-	#EL SLEEP TIME DEBE SER UNA VARIABLE DECLARADA EN SETEARAMBIENTE
-	#EL SLEEP TIME DEBE SER UNA VARIABLE DECLARADA EN SETEARAMBIENTE
+	#Si la carpeta tiene archivos sin procesar, ejecuta recorrerArchivos
+	cantFicheros=`ls "$ARRIDIR" | wc -l`
 
+	if [ $cantFicheros != "0" ]; then
+			recorrerArchivos "$lista"
+	
+	else
+		#Verificar si hay Novedades Pendientes
+		verificarNovedadesPendientes
+	fi
+
+	sleep $SLEEPTIME
 	start
 
 	RETVAL=$?
