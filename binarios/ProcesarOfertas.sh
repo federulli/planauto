@@ -1,31 +1,27 @@
 #!/bin/bash
 
-#Los archivos adentro tienen:
-# 7 caracteres, los primeros 4 corresponen al numero de grupo,
-# los siguientes 3 al numero de orden de suscriptor dentro del grupo.
-#Luego del ; el importe que se ofrece pra licitar. Es un real, puede tener decimales
-
 function verificarDirectorioProcesados {
 	#Si el directorio de procesados no existe lo crea
-	if [ ! -d "$PROCDIR" ]; then
-		mkdir "$PROCDIR"
+	#if [ ! -d "$PROCDIR" ]; then
+		#mkdir "$PROCDIR"
+	#fi
+	#LO DEJO COMENTADO PORQUE ESTA BUGUEADO, PROCDIR GRABA TODA UNA CADENA DE CARACTERES INVALIDAS!!!
+
+
+	#Si el directorio de procesadas no existe lo crea
+	if [ ! -d "$PROCDIRP" ]; then
+		mkdir -p "$PROCDIRP"
 	fi
 
 	#Si el directorio de ofertas validas no existe lo crea
-	if [ ! -d "$PROCDIR/validas" ]; then
-		mkdir "$PROCDIR/validas"
-	fi
-
-	#Si el directorio de procesadas no existe lo crea
-	if [ ! -d "$PROCDIR/procesadas" ]; then
-		mkdir "$PROCDIR/procesadas"
+	if [ ! -d "$PROCDIRV" ]; then
+		mkdir -p "$PROCDIRV"
 	fi
 
 	#Si el directorio de rechazadas no existe lo crea
-	if [ ! -d "$PROCDIR/rechazadas" ]; then
-		mkdir "$PROCDIR/rechazadas"
+	if [ ! -d "$PROCDIRR" ]; then
+		mkdir -p "$PROCDIRR"
 	fi
-
 
 }
 
@@ -38,32 +34,45 @@ function inicializarBitacora {
 	fi
 }
 
-function verificarCampos {
-	echo "entre a veriicar campos joya"
-	#cat $PROCDIR/procesadas/$1 | awk -F;
-}
-
 function verificarDuplicado {
 	#Si el fichero ya fue procesado, lo muevo a NOKDIR
-	if [ -f "$PROCDIR/procesadas/$1" ]; then
+	if [ -f "$PROCDIRP/$1" ]; then
 		$BINDIR/MoverArchivos.sh "$OKDIR/$1" "$NOKDIR"
 		$BINDIR/GrabarBitacora.sh "ProcesarOfertas" "Se rechaza el archivo $1 por estar DUPLICADO."
 		return "1"
 	else
-		#Muevo el archivo a PROCDIR/procesadas
-		#$BINDIR/MoverArchivos.sh "$OKDIR/$1" "$PROCDIR/procesadas/$1"
 		return "0"
+	fi
+}
+
+function validarOferta {
+	#Creo la lista de grupos
+	listaGrupos=`cat $OKDIR/$1 | grep "^[^;]*;[^;]*$" | sed "s-\([0-9]\)\([0-9]\)\([0-9]\)\([0-9]\).*-\1\2\3\4-"`
+	echo $listaGrupos
+
+	#POR ACA QUEDEEEEEEEEEEEEEEEEEEEEEEEEEEE
+
+}
+
+function verificarEstructura {
+	#El tp dice validar solo la primer linea, para hacerlo mas robusto, se valida todo el archivo. Si una linea no cumple, se da el archivo por erroneo
+
+	if [ `grep "^[^;]*;[^;]*;.*$" "$OKDIR/$1" | wc -c` != "0" ]; then
+		$BINDIR/MoverArchivos.sh "$OKDIR/$1" "$NOKDIR"
+		$BINDIR/GrabarBitacora.sh "ProcesarOfertas" "Se rechaza el archivo $1 porque su estructura no se corresponde con el formato esperado."
+	else
+		$BINDIR/GrabarBitacora.sh "ProcesarOfertas" "Archivo a procesar: $1"
+		validarOferta $1
 	fi
 }
 
 function procesarArchivos {
 	inicializarBitacora
 	for file in `$BINDIR/indiceAceptados.pl`; do
-		echo "hola"
-		#verificarDuplicado $file
-		#if [ $? = "0" ]; then
-		#	verificarCampos $file
-		#fi
+		verificarDuplicado $file
+		if [ $? = "0" ]; then
+			verificarEstructura $file
+		fi
 	done
 	
 }

@@ -121,21 +121,20 @@ start(){
 	cantFicheros=`ls "$ARRIDIR" | wc -l`
 
 	if [ $cantFicheros != "0" ]; then
-			recorrerArchivos "$lista"
-	
-	else
-		#Verificar si hay Novedades Pendientes
-		verificarNovedadesPendientes
+		recorrerArchivos "$lista"
 	fi
 
-	sleep $SLEEPTIME
-	start
+	#Verificar si hay Novedades Pendientes
+	verificarNovedadesPendientes
+
+	#sleep $SLEEPTIME
+	#start
 
 	RETVAL=$?
 }
  
 stop(){
-	echo -n $"Stopping service: "
+	echo -n $"Servicio detenido: "
 
 	RETVAL=$?
 	echo

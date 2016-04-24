@@ -129,6 +129,12 @@ function inicializar_variables {
 	export OKDIR
 	PROCDIR=`cat "../config/CIPAL.cnf" | grep "^PROCDIR" | sed "s/^PROCDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export PROCDIR
+	PROCDIRV=`cat "../config/CIPAL.cnf" | grep "^PROCDIRV" | sed "s/^PROCDIRV=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	export PROCDIRV
+	PROCDIRP=`cat "../config/CIPAL.cnf" | grep "^PROCDIRP" | sed "s/^PROCDIRP=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	export PROCDIRP
+	PROCDIRR=`cat "../config/CIPAL.cnf" | grep "^PROCDIRR" | sed "s/^PROCDIRR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	export PROCDIRR
 	INFODIR=`cat "../config/CIPAL.cnf" | grep "^INFODIR" | sed "s/^INFODIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export INFODIR
 	LOGDIR=`cat "../config/CIPAL.cnf" | grep "^LOGDIR" | sed "s/^LOGDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
@@ -148,6 +154,10 @@ function loguear_valor_variables {
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "ARRIDIR=$ARRIDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "OKDIR=$OKDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "PROCDIR=$PROCDIR"
+	#Divido las subcarpetas necesarias para procesar archivos
+	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "PROCDIRV=$PROCDIRV"
+	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "PROCDIRP=$PROCDIRP"
+	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "PROCDIRR=$PROCDIRR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "INFODIR=$INFODIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "LOGDIR=$LOGDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "NOKDIR=$NOKDIR"
