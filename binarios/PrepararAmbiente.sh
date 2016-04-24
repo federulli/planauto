@@ -119,31 +119,31 @@ function verificar_permisos {
 }
 
 function inicializar_variables {
-	BINDIR=`cat "../config/CIPAL.cnf" | grep "^BINDIR" | sed "s/^BINDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
+	BINDIR=`cat "../config/CIPAL.cnf" | grep "^BINDIR=" | sed "s/^BINDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
 	export BINDIR
-	MAEDIR=`cat "../config/CIPAL.cnf" | grep "^MAEDIR" | sed "s/^MAEDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
+	MAEDIR=`cat "../config/CIPAL.cnf" | grep "^MAEDIR=" | sed "s/^MAEDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
 	export MAEDIR
-	ARRIDIR=`cat "../config/CIPAL.cnf" | grep "^ARRIDIR" | sed "s/^ARRIDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	ARRIDIR=`cat "../config/CIPAL.cnf" | grep "^ARRIDIR=" | sed "s/^ARRIDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export ARRIDIR
-	OKDIR=`cat "../config/CIPAL.cnf" | grep "^OKDIR" | sed "s/^OKDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	OKDIR=`cat "../config/CIPAL.cnf" | grep "^OKDIR=" | sed "s/^OKDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export OKDIR
-	PROCDIR=`cat "../config/CIPAL.cnf" | grep "^PROCDIR" | sed "s/^PROCDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	PROCDIR=`cat "../config/CIPAL.cnf" | grep "^PROCDIR=" | sed "s/^PROCDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export PROCDIR
-	PROCDIRV=`cat "../config/CIPAL.cnf" | grep "^PROCDIRV" | sed "s/^PROCDIRV=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	PROCDIRV=`cat "../config/CIPAL.cnf" | grep "^PROCDIRV=" | sed "s/^PROCDIRV=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export PROCDIRV
-	PROCDIRP=`cat "../config/CIPAL.cnf" | grep "^PROCDIRP" | sed "s/^PROCDIRP=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	PROCDIRP=`cat "../config/CIPAL.cnf" | grep "^PROCDIRP=" | sed "s/^PROCDIRP=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export PROCDIRP
-	PROCDIRR=`cat "../config/CIPAL.cnf" | grep "^PROCDIRR" | sed "s/^PROCDIRR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	PROCDIRR=`cat "../config/CIPAL.cnf" | grep "^PROCDIRR=" | sed "s/^PROCDIRR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export PROCDIRR
-	INFODIR=`cat "../config/CIPAL.cnf" | grep "^INFODIR" | sed "s/^INFODIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	INFODIR=`cat "../config/CIPAL.cnf" | grep "^INFODIR=" | sed "s/^INFODIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export INFODIR
-	LOGDIR=`cat "../config/CIPAL.cnf" | grep "^LOGDIR" | sed "s/^LOGDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	LOGDIR=`cat "../config/CIPAL.cnf" | grep "^LOGDIR=" | sed "s/^LOGDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export LOGDIR
-	NOKDIR=`cat "../config/CIPAL.cnf" | grep "^NOKDIR" | sed "s/^NOKDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	NOKDIR=`cat "../config/CIPAL.cnf" | grep "^NOKDIR=" | sed "s/^NOKDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export NOKDIR
-	LOGSIZE=`cat "../config/CIPAL.cnf" | grep "^LOGSIZE" | sed "s/^LOGSIZE=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	LOGSIZE=`cat "../config/CIPAL.cnf" | grep "^LOGSIZE=" | sed "s/^LOGSIZE=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export LOGSIZE
-	SLEEPTIME=`cat "../config/CIPAL.cnf" | grep "^SLEEPTIME" | sed "s/^SLEEPTIME=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	SLEEPTIME=`cat "../config/CIPAL.cnf" | grep "^SLEEPTIME=" | sed "s/^SLEEPTIME=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export SLEEPTIME
 	return 0
 }
