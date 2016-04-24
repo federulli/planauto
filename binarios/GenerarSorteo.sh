@@ -5,28 +5,26 @@ function validarArchivo {
 #primero verifico el nombre
 	archivo="$1"
 	if [ "$archivo" != "FechasAdj.csv" ]; then
-	#	$BINDIR/GrabarBitacora.sh "GenerarSorteo" "Nombre de archivo de adjudicacion invalido" "ERR"
+		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "Nombre de archivo de adjudicacion invalido" "ERR"
 		exit 1
 	fi		
 #verifico que el archivo exista y no este vacio
 	if [ ! -f "$archivo" ]; then
-	#	$BINDIR/GrabarBitacora.sh "GenerarSorteo" "No existe archivo de adjudicaciones" "ERR"		
+		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "No existe archivo de adjudicaciones" "ERR"		
 		exit 1
 	else
 		if [ ! -s "$archivo" ]; then
-	#	$BINDIR/GrabarBitacora.sh "GenerarSorteo" "El archivo de adjudicaciones esta vacio" "ERR"
+		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "El archivo de adjudicaciones esta vacio" "ERR"
 		exit 1
-	fi	
-	echo "paso todas las validaciones"	
+	fi		
 }
 
 function verificarParametros {
 	if [ $# -lt 1 ]; then
-#		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "Cantidad de parametros incorrecta" "ERR"
-		echo "cantidad de parametros incorrecta"
+		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "Cantidad de parametros incorrecta" "ERR"
+
 		exit 1
 	else
-		echo "paso la verificacion de parametros"
 		validarArchivo "$1"
 	fi
 }
@@ -71,7 +69,6 @@ function realizarSorteo {
 }
 
 verificarParametros "$@"
-echo "termino las validaciones"
 iniciarLog
 verificarDirectorios
 realizarSorteo "$1"
