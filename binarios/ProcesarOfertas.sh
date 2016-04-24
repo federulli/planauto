@@ -2,11 +2,9 @@
 
 function verificarDirectorioProcesados {
 	#Si el directorio de procesados no existe lo crea
-	#if [ ! -d "$PROCDIR" ]; then
-		#mkdir "$PROCDIR"
-	#fi
-	#LO DEJO COMENTADO PORQUE ESTA BUGUEADO, PROCDIR GRABA TODA UNA CADENA DE CARACTERES INVALIDAS!!!
-
+	if [ ! -d "$PROCDIR" ]; then
+		mkdir "$PROCDIR"
+	fi
 
 	#Si el directorio de procesadas no existe lo crea
 	if [ ! -d "$PROCDIRP" ]; then
