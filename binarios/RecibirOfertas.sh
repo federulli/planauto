@@ -109,7 +109,8 @@ function verificarNovedadesPendientes {
 		if ! [ -z `pidof -x ProcesarOfertas.sh` ]; then
 			$BINDIR/GrabarBitacora.sh "RecibirOfertas" "Invocacion de ProcesarOfertas pospuesta para el siguiente ciclo."
 		else
-			$BINDIR/LanzarProceso.sh "ProcesarOfertas" "F"
+			#Lo ejecuto en B para que RecibirOfertas siga trabajando
+			$BINDIR/LanzarProceso.sh "ProcesarOfertas" "B"
 		fi
 	fi
 }
