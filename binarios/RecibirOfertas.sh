@@ -127,8 +127,8 @@ start(){
 	#Verificar si hay Novedades Pendientes
 	verificarNovedadesPendientes
 
-	#sleep $SLEEPTIME
-	#start
+	sleep $SLEEPTIME
+	start
 
 	RETVAL=$?
 }
