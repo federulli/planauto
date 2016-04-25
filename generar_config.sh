@@ -14,7 +14,7 @@ echo PROCDIRR=`pwd`/procesados/rechazadas=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo INFODIR=`pwd`/informes=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo LOGDIR=`pwd`/bitacoras=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo NOKDIR=`pwd`/rechazados=$USER=`date`>>`pwd`/config/CIPAL.cnf
-echo LOGSIZE=10=$USER=`date`>>`pwd`/config/CIPAL.cnf
+echo LOGSIZE=1000=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo SLEEPTIME=10=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo BINFILES=DetenerProceso.sh,GrabarBitacora.sh,LanzarProceso.sh,MoverArchivos.sh,PrepararAmbiente.sh,RecibirOfertas.sh,GenerarSorteo.sh,ProcesarOfertas.sh,DeterminarGanadores.pl=$USER=`date`>>`pwd`/config/CIPAL.cnf
 echo MAEFILES=concesionarios.csv,FechasAdj.csv,grupos.csv,temaL_padron.csv=$USER=`date`>>`pwd`/config/CIPAL.cnf
