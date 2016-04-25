@@ -113,21 +113,22 @@ function validarImporte {
 	
 	#Lo que oferta el usuario
 	importe=`cat $OKDIR/$3 | grep "$2" | sed "s-[^;]*;\(.*\)-\1-"`
-	importeOfertado=`echo $importe | sed "s/;/./g"`
+	importeOfertado=`echo $importe | sed "s/,/./g"`
 	cuotaPura=`echo $valorCuotaPura | sed "s/,/./g"`
 	
 	#Valores finales de interes
-	montoMinimo=`echo "scale=1; $cuotaPura * $cantCuotasLicitar" | bc`
-	montoMaximo=`echo "scale=1; $cuotaPura * $cantCuotasPendientes" | bc`
+	montoMinimo=`echo "scale=2; $cuotaPura * $cantCuotasLicitar" | bc`
+	montoMaximo=`echo "scale=2; $cuotaPura * $cantCuotasPendientes" | bc`
 
 	#Validaciones con bc para poder trabajar con decimales
-	validoMontoMinimo=$( echo "$montoMinimo<=$importeOfertado" | bc )
-		if [ $validoMontoMinimo -eq 0 ]; then
+	validoMontoMinimo=$( echo "$importeOfertado>=$montoMinimo" | bc )
+
+		if [ $validoMontoMinimo -eq 0 ]; then # 0 falso 1 verdadero
 			primeraCondicion=false
 		else
 			primeraCondicion=true	
 		fi
-	validoMontoMaximo=$( echo "$montoMaximo>=$importeOfertado" | bc )
+	validoMontoMaximo=$( echo "$importeOfertado<=$montoMaximo" | bc )
 		if [ $validoMontoMinimo -eq 0 ]; then
 			segundaCondicion=false
 	
