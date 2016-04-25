@@ -219,6 +219,7 @@ function procesarArchivos {
 	done
 }
 
+$BINDIR/GrabarBitacora.sh "RecibirOfertas" "ProcesarOfertas corriendo bajo el nro.: `pgrep -f  ProcesarOfertas.sh`"
 verificarDirectorioProcesados
 procesarArchivos
 

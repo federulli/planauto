@@ -7,6 +7,7 @@ function rechazarArchivo {
 	fi
 				
 	$BINDIR/MoverArchivos.sh "$ARRIDIR/$1" "$NOKDIR" "RecibirOfertas"
+	$BINDIR/GrabarBitacora.sh "RecibirOfertas" "Se rechaza el archivo $1. $2" #$2 Es el motivo
 }
 
 function aceptarArchivo {
@@ -20,7 +21,7 @@ function aceptarArchivo {
 
 		$BINDIR/MoverArchivos.sh "$ARRIDIR/$1" "$OKDIR" "RecibirOfertas"
 	else
-		rechazarArchivo $1
+		rechazarArchivo $1 "El archivo esta vacio."
 	fi		
 }
 
@@ -94,7 +95,7 @@ function recorrerArchivos {
 			aceptarArchivo $file
 				
 		else
-			rechazarArchivo $file
+			rechazarArchivo $file "Extension invalida."
 		fi
        	done
 }
@@ -104,7 +105,12 @@ function verificarNovedadesPendientes {
 	cantFicheros=`ls "$OKDIR" | wc -l`
 
 	if [ $cantFicheros != "0" ]; then
+		#Si el proceso se encuentra en ejecucion grabo el log
+		if ! [ -z `pidof -x ProcesarOfertas.sh` ]; then
+			$BINDIR/GrabarBitacora.sh "RecibirOfertas" "Invocacion de ProcesarOfertas pospuesta para el siguiente ciclo."
+		else
 			$BINDIR/LanzarProceso.sh "ProcesarOfertas" "F"
+		fi
 	fi
 }
 
@@ -128,6 +134,8 @@ start(){
 	verificarNovedadesPendientes
 
 	sleep $SLEEPTIME
+	$BINDIR/GrabarBitacora.sh "RecibirOfertas" "Ciclo nro. $ciclo"
+	ciclo=$((ciclo+1))
 	start
 
 	RETVAL=$?
@@ -150,16 +158,17 @@ restart(){
 #start - stop - restart ejecuta la función correspondiente.
 case "$script_padre" in
 start)
- start
- ;;
+	ciclo=0
+	start
+	;;
 stop)
- stop
- ;;
+	stop
+	;;
 restart)
- restart
- ;;
+	restart
+	;;
 *)
- exit 1
+	exit 1
 esac
  
 exit 0
