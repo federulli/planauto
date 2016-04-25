@@ -67,7 +67,6 @@ function verificarRegistro { # Fuente, contratoFusionado
 		usuario=$USER
 		fecha=`date`
 	
-		#la fecha de adjudicacion se saca de maedir!
 		local file="$PROCDIRV/$fechaValida.txt"
 		echo "$codigo;$fechaValida;$contratoFusionado;$grupo;$numeroDeOrden;$importeOfertado;$nombreSuscriptor;$usuario;$fecha" >> $file
 	fi
@@ -138,10 +137,8 @@ function validarImporte {
 
 	if [[ $primeraCondicion = false ]]; then
 		rechazarRegistro "$3" "No alcanza el monto minimo" "$2"
-		break
 	elif [[ $segundaCondicion = false ]]; then
 		rechazarRegistro "$3" "Supera el monto maximo" "$2"
-		break
 	elif [[ $primeraCondicion = true ]] && [[ $segundaCondicion = true ]]; then
 		validarParticipacion $1 $4 $3 $2 #Grupo, numero de orden, archivo, contratoFusionado
 	fi 
