@@ -55,7 +55,7 @@ function verificarRegistro { # Fuente, contratoFusionado
 
 	#Si no hay fecha de adjudicacion, se da el registro por invalido
 	if [[ -z $fechaValida ]]; then
-		rechazarRegistro $1 "Archivo sin fecha de adjudicacion" $2
+		rechazarRegistro $1 "No se encontro fecha de adjudicacion" $2
 	else
 		cantidadDeOfertasValidas=$((cantidadDeOfertasValidas+1))
 
