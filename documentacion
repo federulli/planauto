@@ -1,0 +1,22 @@
+PrepararAmbiente
+
+* Si el ambiente ya esta inicializado, imprime en pantalla y loguea error.
+* Para verificar la integridad de la instalacion, el script lee del archivo de configuracion un BINFILES y MAEFILES que contiene el nombre de todos los scripts y los archivos maestros necesarios para la correcta ejecucion.
+* Se verifica que los archivos maestros tengan permiso de lectrua y los archivos en la carpeta binarios tengan permisos de ejecucion. si no los tienen los cambia, si no se pueden cambiar imprime un error en pantalla sin loguear nada y termina la ejecucion.
+
+LanzarProceso
+
+* Posee 2 parametros el primero indica el nombre del script a ejecutar solo se deve pasar el nombre, el script buscara el ejecutable con el nombre psado por parametro en la carpeta binarios, el segundo parametro indica si el script sera ejecutado en BACKGRAUND ( "B" ) o FOREGRAUND ( "F" )
+* Antes de ejecutar el nuevo script se verifica que no este actualemente siendo ejecutado y que el ambiente este inicializado.
+
+
+DetenerProceso
+
+* Detiene la ejecucion del proceso pasado por parametro, por parametro se pasa solo el nombre con o sin extension sin ruta.
+
+MoverArchivos
+
+* El primer parametro es el origien, el segundo el destino y el tercero ( opcional ) el nombre del parametro en el que va a loguear.
+* Si no se pasa el nombre del parametro se logea en el log de MoverArchivo.
+* En destino puede no pasarse  un nombre para el archivo por lo que se usara el nombre del archivo origen.
+* El nombre de archivo duplicado se define juntando el nombre del archivo mas un numero incremental que va desde el 0 hasta que sea unico.
