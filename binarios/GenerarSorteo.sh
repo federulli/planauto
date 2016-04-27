@@ -1,7 +1,6 @@
 #!/bin/bash
 
 function validarArchivo {
-
 #primero verifico el nombre
 	archivo="$1"
 	if [ "$archivo" != "$MAEDIR/FechasAdj.csv" ]; then
@@ -50,17 +49,27 @@ function verificarDirectorios {
 
 function realizarSorteo {
 #TODO verificar que la fecha de adjudicacion del archivo sea valida ej: 30/02/2016 --> invalida
-#TODO funcion para verificar si hay otros sorteos en la misma fecha y ajustar el id 
 	seguir=true
 	fechaActual=$(date +%Y%m%d)
 	while IFS='' read -r linea && [ $seguir = true ]; do	
-		fechaAdjudicacion=`echo $linea | sed "s-\([0-9]*\).\([0-9]*\).\([0-9]*\).*-\3\2\1-"` #obtengo la fecha de adjudicacion en formato dd/mm/aaaa y la paso a aaaammdd
+	    #obtengo la fecha de adjudicacion en formato dd/mm/aaaa y la paso a aaaammdd
+		fechaAdjudicacion=`echo $linea | sed "s-\([0-9]*\).\([0-9]*\).\([0-9]*\).*-\3\2\1-"`
 		if  [ $fechaActual -le $fechaAdjudicacion ]; then
 			seguir=false		
 		fi
 	done < $1
 
-	sorteoId=1
+	if [ $seguir = true ]; then
+		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "No hay fechas de adjudicacion posteriores al dia de la fecha" "ERR"
+		exit 1
+	fi
+
+	cantidadDeSorteos=`ls "$PROCDIR/sorteos" | wc -l`
+	if [ $cantidadDeSorteos -eq 0 ]; then
+		sorteoId=1
+	else
+		sorteoId=$((cantidadDeSorteos+1))
+	fi
 	rutaArchAdjudicaciones="${PROCDIR}/sorteos/${sorteoId}_${fechaAdjudicacion}.srt"
 
 	primerNumeroSorteo=1
