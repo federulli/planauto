@@ -1,5 +1,4 @@
 #!/bin/bash
-
 function validarArchivo {
 #primero verifico el nombre
 	archivo="$1"
@@ -48,15 +47,21 @@ function verificarDirectorios {
 }
 
 function realizarSorteo {
-#TODO verificar que la fecha de adjudicacion del archivo sea valida ej: 30/02/2016 --> invalida
 	seguir=true
 	fechaActual=$(date +%Y%m%d)
+
 	while IFS='' read -r linea && [ $seguir = true ]; do	
 	    #obtengo la fecha de adjudicacion en formato dd/mm/aaaa y la paso a aaaammdd
 		fechaAdjudicacion=`echo $linea | sed "s-\([0-9]*\).\([0-9]*\).\([0-9]*\).*-\3\2\1-"`
-		if  [ $fechaActual -le $fechaAdjudicacion ]; then
+		#verifico que sea una fecha valida
+		date --date $fechaAdjudicacion >/dev/null 2>&1 #Oculto salida estandar y error
+		if [ $? = 0 ]; then
+			if  [ $fechaActual -le $fechaAdjudicacion ]; then
 			seguir=false		
-		fi
+			fi
+		else
+			$BINDIR/GrabarBitacora.sh "GenerarSorteo" "El archivo maestro de adjudicaciones presenta la siguiente fecha de adjudicacion invalida $linea " "WAR"
+		fi		
 	done < $1
 
 	if [ $seguir = true ]; then
@@ -70,8 +75,8 @@ function realizarSorteo {
 	else
 		sorteoId=$((cantidadDeSorteos+1))
 	fi
-	rutaArchAdjudicaciones="${PROCDIR}/sorteos/${sorteoId}_${fechaAdjudicacion}.srt"
 
+	rutaArchAdjudicaciones="${PROCDIR}/sorteos/${sorteoId}_${fechaAdjudicacion}.srt"
 	primerNumeroSorteo=1
 	ultimoNumeroSorteo=168
 	numeroDeOrden=1
