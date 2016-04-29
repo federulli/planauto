@@ -6,7 +6,7 @@
 sub obtener_nombre_archivo_sorteo {
       #Devuelve el nombre del archivo de sorteo que contanga el id pasado por parametro
       $id = @_[0];
-      opendir(sorteos, "$ENV{'PROCDIR'})/sorteos";
+      opendir(sorteos, "$ENV{'PROCDIR'})/sorteos");
       @files = readdir(sorteos);
       @files = grep /^$id/, @files;
       if ( scalar @files < 1) {
@@ -122,12 +122,13 @@ sub ganadores_por_sorteo {
 		$matches = grep /$info_suscriptor[0]/, @grupos;
 		if($matches ne ""){
 			$suscriptores_por_grupo{$info_suscriptor[0]}{$info_suscriptor[1]} = $info_suscriptor[2];
+		}
 	}
 	close(SUSCRIPTORES);
 	%ganadores_sorteo_por_grupo;
 	foreach $grupo (@grupos){
-		for(i = 0; not exists($suscriptores_por_grupo{$grupo}{$orden_sorteo{@orden_keys[i]}}) ; i++);
-		$ganadores_sorteo_por_grupo{$grupo} = [$orden_sorteo{@orden_keys[i]}, $suscriptores_por_grupo{$grupo}{$orden_sorteo{@orden_keys[i]}}, $orden_keys[i]]
+		for($i = 0; not exists($suscriptores_por_grupo{$grupo}{$orden_sorteo{@orden_keys[$i]}}) ; $i++){}
+		$ganadores_sorteo_por_grupo{$grupo} = [$orden_sorteo{@orden_keys[$i]}, $suscriptores_por_grupo{$grupo}{$orden_sorteo{@orden_keys[$i]}}, $orden_keys[$i]];
 	}
 	return %ganadores_sorteo_por_grupo;
 }
@@ -146,8 +147,8 @@ sub ganadores_por_licitacion{
 	my %campos_licitacion = ("grupo", 3, "orden", 4, "importe", 5, "nombre", 6, "nro_sorteo", 7);
 	while ($licitacion_existente = <LICITACIONES>){
 		@licitacion = split(";", $licitacion_grupo_buscado);
-		for (i = 0; i < $#grupos && $licitacion[grupo] ne $grupos[i]; i++);
-		if (i < $#grupos && $licitacion[$campos_licitacion{orden}] ne $ganadores_por_sorteo{$grupos[i]}[$campos_ganadores_sorteo{orden}]){
+		for ($i = 0; $i < $#grupos && $licitacion{grupo} ne $grupos[$i]; $i++){}
+		if (i < $#grupos && $licitacion[$campos_licitacion{orden}] ne $ganadores_por_sorteo{$grupos[$i]}[$campos_ganadores_sorteo{orden}]){
 			foreach $key (keys(%resultado_sorteo)){
 				if ($resultado_sorteo[$key] eq $licitacion[$campos_licitacion{orden}]){
 					$licitacion[$campos_licitacion{nro_sorteo}] = $key;
@@ -205,7 +206,7 @@ sub resultado_ganadores_por_sorteo{
 		open(SALIDA, ">$ENV{'INFODIR'}/$arch_salida");
 	}
 	@resultado;
-	foreach $grupo (@keys(%ganadores_por_grupo){
+	foreach $grupo (keys(%ganadores_por_grupo)){
 		$resultado = "Ganador por sorteo del grupo ".$grupo.": Nro de Orden: ".$ganadores_por_grupo{$grupo}[0].", ".$ganadores_por_grupo{$grupo}[1]."(Nro. de Sorteo ".$ganadores_por_grupo{$grupo}[2].")\n";
 		print $resultado;
 		if ($grabar) {
@@ -234,8 +235,8 @@ sub resultado_ganadores_por_licitacion{
 		open(SALIDA, ">$ENV{'INFODIR'}/$arch_salida");
 	}
 	@resultado;
-	foreach $grupo (@keys(%ganadores_por_grupo){
-		$resultado = "Ganador por licitación del grupo ".$grupo.": Nro de Orden: ".$ganadores_por_grupo{$grupo}[0].", ".$ganadores_por_grupo{$grupo}[1]." con $".$ganadores_por_grupo{$grupo}[2]."(Nro. de Sorteo ".$ganadores_por_grupo{$grupo}[3].")\n";
+	foreach $grupo (keys(%ganadores_por_grupo)){
+		$resultado = "Ganador por licitación del grupo $grupo: Nro de Orden: $ganadores_por_grupo{$grupo}[0], $ganadores_por_grupo{$grupo}[1] con \$$ganadores_por_grupo{$grupo}[2](Nro. de Sorteo $ganadores_por_grupo{$grupo}[3])\n";
 		print $resultado;
 		if ($grabar){
 			print SALIDA $resultado;
@@ -258,7 +259,7 @@ sub resultado_por_grupos{
 	print $titulo;
 
 	@resultado;
-	foreach $grupo (@keys(%ganadores_por_sorteo){
+	foreach $grupo (keys(%ganadores_por_sorteo)){
 		if ($grabar) {
 			$arch_salida = $id."_Grupo".$grupo."_".$fecha_adj;
 			open(SALIDA, ">$ENV{'INFODIR'}/$arch_salida");
