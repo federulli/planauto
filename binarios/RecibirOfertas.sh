@@ -162,7 +162,7 @@ stop(){
  
 restart(){
 	stop
-	sleep 10
+	sleep $SLEEPTIME
 	start
 }
  
