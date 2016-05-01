@@ -13,12 +13,6 @@ function rechazarArchivo {
 function aceptarArchivo {
 	#Si el archivo esta vacio, de cualquier forma se rechaza
 	if [ -s $ARRIDIR/$1 ]; then
-
-		#Si no existe la carpeta de aceptados la creo
-		if [ ! -d "$OKDIR" ]; then
-			mkdir "$OKDIR"
-		fi
-
 		$BINDIR/MoverArchivos.sh "$ARRIDIR/$1" "$OKDIR" "RecibirOfertas"
 	else
 		rechazarArchivo $1 "El archivo esta vacio."
@@ -101,6 +95,11 @@ function recorrerArchivos {
 }
 
 function verificarNovedadesPendientes {
+	#Si no existe la carpeta de aceptados la creo
+	if [ ! -d "$OKDIR" ]; then
+		mkdir "$OKDIR"
+	fi
+
 	#Si la carpeta tiene archivos sin procesar, invoco ProcesarOfertas.sh
 	cantFicheros=`ls "$OKDIR" | wc -l`
 
