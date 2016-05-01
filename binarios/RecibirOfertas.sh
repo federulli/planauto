@@ -19,15 +19,20 @@ function aceptarArchivo {
 	fi		
 }
 
-function validarFecha {
-	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
-	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
-	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
-	ultimaAdjudicacion="19910514"
-	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
-	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
-	#ULTIMO ACTO DE ADJUDICACION ES UNA CONSTANTE SOLO PARA TESTEAR Y PORQUE FALTA ESTE SCRIPT!!!
+function ultimaFechaDeAdj {
+	#Todos los meses se hace un acto, por ende, tomo la fecha que corresponde al mes anterior del actual
+	#como ultima fecha de adjudicacion
 
+	mesUltimoActo=`date +%m --date='-1 month'`
+	fecha=`cat $MAEDIR/FechasAdj.csv | grep "[0-9][0-9]/$mesUltimoActo" | sed "s-\([^;]*\).*-\1-"`
+
+	#Fecha valida es en formato aaaammdd
+	fechaValida=`echo $fecha | sed "s-\([^\/]*\)\/\([^\/]*\)\/\([^\/]*\).*-\3\2\1-"`
+}
+
+function validarFecha {
+	ultimaFechaDeAdj	
+	ultimaAdjudicacion=$fechaValida
 	fecha=`echo $1 | sed "s-\([^_]*\)_\(.*\)-\2-"`
 
 	date --date $fecha >/dev/null 2>&1 #Oculto salida estandar y error
@@ -35,11 +40,16 @@ function validarFecha {
 		fechaDeHoy=`date +%Y%m%d`
 		calculoDiaActual=$[$fechaDeHoy-$fecha]
 		calculoDiaAdjudicacion=$[$fecha-$ultimaAdjudicacion]
-		if [ $calculoDiaActual -ge "0" ] && [ $calculoDiaAdjudicacion -gt "0" ]; then #-ge: mayor o igual a...
+		if [[ $calculoDiaActual -ge 0 ]] && [[ $calculoDiaAdjudicacion -gt 0 ]]; then #-ge: mayor o igual a... -gt mayor a...
 			return 0
+		else
+			motivo="La fecha en el nombre de archivo no es menor o igual a la fecha actual o no es mayor a la fecha del ultimo acto de adjudicacion"
+			return 1
 		fi
+
 	else
-		#Fecha invalida		
+		#Fecha invalida	
+		motivo="La fecha en el nombre del archivo no es valida"	
 		return 1
 	fi
 }
@@ -64,6 +74,7 @@ function validarConcesionario {
 		validarFecha $1 #$1=Nombre de fichero
 	else
 		#No existe concesionario
+		motivo="No existe concesionario"
 		return 1
 	fi	
 }
@@ -74,6 +85,7 @@ function validar {
 		validarConcesionario "$2" "$3" #$2=Nombre de fichero, $3=Lista de concesionarios
 	else
 		#Extension invalida
+		motivo="Extension invalida"
 		return 1
 	fi
 }
@@ -89,7 +101,7 @@ function recorrerArchivos {
 			aceptarArchivo $file
 				
 		else
-			rechazarArchivo $file "Extension invalida."
+			rechazarArchivo $file "$motivo"
 		fi
        	done
 }
@@ -131,12 +143,12 @@ start(){
 	fi
 
 	#Verificar si hay Novedades Pendientes
-	verificarNovedadesPendientes
+	#verificarNovedadesPendientes
 
-	sleep $SLEEPTIME
-	$BINDIR/GrabarBitacora.sh "RecibirOfertas" "Ciclo nro. $ciclo"
-	ciclo=$((ciclo+1))
-	start
+	#sleep $SLEEPTIME
+	#$BINDIR/GrabarBitacora.sh "RecibirOfertas" "Ciclo nro. $ciclo"
+	#ciclo=$((ciclo+1))
+	#start
 
 	RETVAL=$?
 }
