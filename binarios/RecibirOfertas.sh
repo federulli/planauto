@@ -143,12 +143,12 @@ start(){
 	fi
 
 	#Verificar si hay Novedades Pendientes
-	#verificarNovedadesPendientes
+	verificarNovedadesPendientes
 
-	#sleep $SLEEPTIME
-	#$BINDIR/GrabarBitacora.sh "RecibirOfertas" "Ciclo nro. $ciclo"
-	#ciclo=$((ciclo+1))
-	#start
+	sleep $SLEEPTIME
+	$BINDIR/GrabarBitacora.sh "RecibirOfertas" "Ciclo nro. $ciclo"
+	ciclo=$((ciclo+1))
+	start
 
 	RETVAL=$?
 }
