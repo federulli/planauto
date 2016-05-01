@@ -2,6 +2,9 @@
 
 # parametro nombre del proceso a detener sin .sh
 
+script_padre="stop" #El demonio necesita saber si va a ser iniciado o detenido, esta variable cumple esa funcion
+export script_padre
+
 if [ $# -lt 1 ]; then
 	echo "Falta indicar el nombre del proceso a detener"
 	exit

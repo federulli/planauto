@@ -21,7 +21,10 @@ function GrabarBitacora {
 				return 1
 			fi
 	fi
-
+	# Si no existe la carpeta bitacotra la creo
+	if [ ! -d $LOGDIR ]; then
+		mkdir $LOGDIR
+	fi
 	local file="$LOGDIR/$comando.log"
 
 	local lineas=0

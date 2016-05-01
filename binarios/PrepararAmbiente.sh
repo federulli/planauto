@@ -119,6 +119,14 @@ function verificar_permisos {
 }
 
 function inicializar_variables {
+	if [ ! -d "../config/" ]; then
+		echo "No se encuentra la carpeta config"
+		return 1
+	fi
+	if [ ! -f "../config/CIPAL.cnf" ]; then
+		echo "No se encuentra el archivo de configuracion"
+                return 1
+	fi
 	BINDIR=`cat "../config/CIPAL.cnf" | grep "^BINDIR=" | sed "s/^BINDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
 	export BINDIR
 	MAEDIR=`cat "../config/CIPAL.cnf" | grep "^MAEDIR=" | sed "s/^MAEDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
@@ -192,12 +200,16 @@ if [ "$AMBIENTE_INICIALIZADO" == "SI" ]; then
 fi
 
 inicializar_variables
+variables_ok=$?
+instalacion_ok=1
+permisos_ok=1
+if [ $variables_ok -eq 0 ]; then
+	verificar_integridad_instalacion
+	instalacion_ok=$?
 
-verificar_integridad_instalacion
-instalacion_ok=$?
-
-verificar_permisos
-permisos_ok=$?
+	verificar_permisos
+	permisos_ok=$?
+fi
 
 if [ $instalacion_ok -eq 0 ] && [ $permisos_ok -eq 0 ];
 	then

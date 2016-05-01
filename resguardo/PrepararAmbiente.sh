@@ -16,6 +16,17 @@ function verificar_permisos_ejecucion {
 	return 0 
 }
 
+function copiar_de_directorio_de_resguardo {
+	backupdir=`cat "../config/CIPAL.cnf" | grep "^BACKUPDIR" | sed "s/^BACKUPDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
+
+	if [ ! -f $backupdir/$1 ]; then
+             echo "$1 no se encuentra en el directorio de resguardo $backupdir" 
+             return 1
+        fi
+	cp -n $backupdir/$1 $2
+	echo $1 restaurado
+	return 0
+}
 
 function verificar_integridad_instalacion {
 	old_ifs=$IFS
@@ -24,17 +35,27 @@ function verificar_integridad_instalacion {
         for file in $files; do
                 if ! [ -f "$BINDIR/$file" ]; then
                         echo No se encuentra el archivo: $file
-                        IFS=$old_ifs
-                        return 1
+			echo Se intentara copiar desde el directorio de resguardo 
+			copiar_de_directorio_de_resguardo $file "$BINDIR"
+                        if [ $? -eq 1 ]; then
+				echo No se puede realizar la copia
+				IFS=$old_ifs
+	               		return 1
+			fi
                 fi
         done
 	files=`cat "../config/CIPAL.cnf" | grep "^MAEFILES" | sed "s/^MAEFILES=\([^=]*\)=[^=]*=[^=]*/\1/"`
         for file in $files; do
                 if ! [ -f "$MAEDIR/$file" ]; then
                         echo No se encuentra el archivo: $file
-                        IFS=$old_ifs
-                        return 1
-                fi
+                        echo Se intentara copiar desde el directorio de resguardo 
+                        copiar_de_directorio_de_resguardo $file "$MAEDIR"
+                        if [ $? -eq 1 ]; then
+                                echo No se puede realizar la copia
+                                IFS=$old_ifs
+                                return 1
+                        fi
+		 fi
         done
         IFS=$old_ifs
 	return 0
@@ -98,25 +119,39 @@ function verificar_permisos {
 }
 
 function inicializar_variables {
-	BINDIR=`cat "../config/CIPAL.cnf" | grep "^BINDIR" | sed "s/^BINDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
+	if [ ! -d "../config/" ]; then
+		echo "No se encuentra la carpeta config"
+		return 1
+	fi
+	if [ ! -f "../config/CIPAL.cnf" ]; then
+		echo "No se encuentra el archivo de configuracion"
+                return 1
+	fi
+	BINDIR=`cat "../config/CIPAL.cnf" | grep "^BINDIR=" | sed "s/^BINDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
 	export BINDIR
-	MAEDIR=`cat "../config/CIPAL.cnf" | grep "^MAEDIR" | sed "s/^MAEDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
+	MAEDIR=`cat "../config/CIPAL.cnf" | grep "^MAEDIR=" | sed "s/^MAEDIR=\([^=]*\)=[^=]*=[^=]*$/\1/"`
 	export MAEDIR
-	ARRDIR=`cat "../config/CIPAL.cnf" | grep "^ARRDIR" | sed "s/^ARRDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
-	export ARRDIR
-	OKDIR=`cat "../config/CIPAL.cnf" | grep "^OKDIR" | sed "s/^OKDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	ARRIDIR=`cat "../config/CIPAL.cnf" | grep "^ARRIDIR=" | sed "s/^ARRIDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	export ARRIDIR
+	OKDIR=`cat "../config/CIPAL.cnf" | grep "^OKDIR=" | sed "s/^OKDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export OKDIR
-	PROCDIR=`cat "../config/CIPAL.cnf" | grep "^PROCDIR" | sed "s/^PROCDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	PROCDIR=`cat "../config/CIPAL.cnf" | grep "^PROCDIR=" | sed "s/^PROCDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export PROCDIR
-	INFODIR=`cat "../config/CIPAL.cnf" | grep "^INFODIR" | sed "s/^INFODIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	PROCDIRV=`cat "../config/CIPAL.cnf" | grep "^PROCDIRV=" | sed "s/^PROCDIRV=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	export PROCDIRV
+	PROCDIRP=`cat "../config/CIPAL.cnf" | grep "^PROCDIRP=" | sed "s/^PROCDIRP=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	export PROCDIRP
+	PROCDIRR=`cat "../config/CIPAL.cnf" | grep "^PROCDIRR=" | sed "s/^PROCDIRR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	export PROCDIRR
+	INFODIR=`cat "../config/CIPAL.cnf" | grep "^INFODIR=" | sed "s/^INFODIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export INFODIR
-	LOGDIR=`cat "../config/CIPAL.cnf" | grep "^LOGDIR" | sed "s/^LOGDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	LOGDIR=`cat "../config/CIPAL.cnf" | grep "^LOGDIR=" | sed "s/^LOGDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export LOGDIR
-	NOKDIR=`cat "../config/CIPAL.cnf" | grep "^NOKDIR" | sed "s/^NOKDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	NOKDIR=`cat "../config/CIPAL.cnf" | grep "^NOKDIR=" | sed "s/^NOKDIR=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export NOKDIR
-	LOGSIZE=`cat "../config/CIPAL.cnf" | grep "^LOGSIZE" | sed "s/^LOGSIZE=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	LOGSIZE=`cat "../config/CIPAL.cnf" | grep "^LOGSIZE=" | sed "s/^LOGSIZE=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export LOGSIZE
-	SLEEPTIME=`cat "../config/CIPAL.cnf" | grep "^SLEEPTIME" | sed "s/^SLEEPTIME=\([^=]*\)=[^=]*=[^=]*/\1/"`
+	SLEEPTIME=`cat "../config/CIPAL.cnf" | grep "^SLEEPTIME=" | sed "s/^SLEEPTIME=\([^=]*\)=[^=]*=[^=]*/\1/"`
 	export SLEEPTIME
 	return 0
 }
@@ -124,9 +159,13 @@ function inicializar_variables {
 function loguear_valor_variables {
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "BINDIR=$BINDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "MAEDIR=$MAEDIR"
-	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "ARRDIR=$ARRDIR"
+	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "ARRIDIR=$ARRIDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "OKDIR=$OKDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "PROCDIR=$PROCDIR"
+	#Divido las subcarpetas necesarias para procesar archivos
+	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "PROCDIRV=$PROCDIRV"
+	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "PROCDIRP=$PROCDIRP"
+	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "PROCDIRR=$PROCDIRR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "INFODIR=$INFODIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "LOGDIR=$LOGDIR"
 	$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "NOKDIR=$NOKDIR"
@@ -161,12 +200,16 @@ if [ "$AMBIENTE_INICIALIZADO" == "SI" ]; then
 fi
 
 inicializar_variables
+variables_ok=$?
+instalacion_ok=1
+permisos_ok=1
+if [ $variables_ok -eq 0 ]; then
+	verificar_integridad_instalacion
+	instalacion_ok=$?
 
-verificar_integridad_instalacion
-instalacion_ok=$?
-
-verificar_permisos
-permisos_ok=$?
+	verificar_permisos
+	permisos_ok=$?
+fi
 
 if [ $instalacion_ok -eq 0 ] && [ $permisos_ok -eq 0 ];
 	then
