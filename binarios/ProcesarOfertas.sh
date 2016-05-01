@@ -43,37 +43,55 @@ function rechazarRegistro { #Fuente #Motivo #ContratoFusionado
 	echo "$fuente;$motivo;$registro;$usuario;$fecha" >> $file
 }
 
+function obtenerFechaAdjudicacion {
+	#Tomo la fecha del mes actual y comparo el dia para ver si es mayor a la fecha actual
+	mesActual=`date +%m`
+	fechaMesActual=`cat $MAEDIR/FechasAdj.csv | grep "[0-9][0-9]/$mesActual" | sed "s-\([^;]*\).*-\1-"`
+	diaCorrespondienteAMesActual=`echo $fechaMesActual | sed "s-\([^\/]*\).*-\1-"`
+	diaDeHoy=`date +%d`
+
+	if [[ $diaCorrespondienteAMesActual -gt $diaDeHoy ]]; then
+		fechaAdjudicacion=`cat $MAEDIR/FechasAdj.csv | grep "$diaCorrespondienteAMesActual/$mesActual" | sed "s-\([^;]*\).*-\1-"`
+		#Fecha valida es en formato aaaammdd
+		fechaValida=`echo $fechaAdjudicacion | sed "s-\([^\/]*\)\/\([^\/]*\)\/\([^\/]*\).*-\3\2\1-"`
+	
+	else
+		#Si el dia actual supera al dia de adjudicacion del mes actual, simplemente tomo la fecha del mes siguiente
+		mesProximoActo=`date +%m --date='+1 month'`
+		fechaProximoActo=`cat $MAEDIR/FechasAdj.csv | grep "[0-9][0-9]/$mesProximoActo" | sed "s-\([^;]*\).*-\1-"`
+
+		#Fecha valida es en formato aaaammdd
+		fechaValida=`echo $fechaProximoActo | sed "s-\([^\/]*\)\/\([^\/]*\)\/\([^\/]*\).*-\3\2\1-"`
+	fi
+}
+
 function verificarRegistro { # Fuente, contratoFusionado 
 	codigo=`echo $1 | sed "s-\([^_]*\).*-\1-"`
-
-	codigoConcesionario=`cat $MAEDIR/temaL_padron.csv | grep "$grupo;$numeroDeOrden" | sed "s-[^;]*;[^;]*;[^;]*;\([^;]*\).*-\1-"`
-	nombreConcesionario=`cat $MAEDIR/concesionarios.csv | grep "$codigoConcesionario" | sed "s-\([^;]*\).*-\1-"`
-	fechaAdjudic=`cat $MAEDIR/FechasAdj.csv | grep "$nombreConcesionario" | sed "s-\([^;]*\).*-\1-"`
 	
-	#Formato de fecha dia-mes-año	
-	fechaValida=`echo $fechaAdjudic | sed "s/\//-/g"`
+	#Seteo la fecha valida del proximo acto de adjudicacion $fechaValida (formato aaaammdd)
+	obtenerFechaAdjudicacion
 
-	#Si no hay fecha de adjudicacion, se da el registro por invalido
-	if [[ -z $fechaValida ]]; then
-		rechazarRegistro $1 "No se encontro fecha de adjudicacion" $2
-	else
-		cantidadDeOfertasValidas=$((cantidadDeOfertasValidas+1))
+	cantidadDeOfertasValidas=$((cantidadDeOfertasValidas+1))
 
-		contratoFusionado=$2
-		grupo=`echo $2 | sed "s-\([0-9]\)\([0-9]\)\([0-9]\)\([0-9]\).*-\1\2\3\4-"`
-		numeroDeOrden=`echo $2 | sed "s-[0-9][0-9][0-9][0-9]\([0-9]\)\([0-9]\)\([0-9]\).*-\1\2\3-"`
-		importeOfertado=`cat $OKDIR/$1 | grep $2 | sed "s-[^;]*;\(.*\)-\1-"`
-		nombreSuscriptor=`cat $MAEDIR/temaL_padron.csv | grep "$grupo;$numeroDeOrden" | sed "s-[^;]*;[^;]*;\([^;]*\).*-\1-"`
-		usuario=$USER
-		fecha=`date`
+	contratoFusionado=$2
+	grupo=`echo $2 | sed "s-\([0-9]\)\([0-9]\)\([0-9]\)\([0-9]\).*-\1\2\3\4-"`
+	numeroDeOrden=`echo $2 | sed "s-[0-9][0-9][0-9][0-9]\([0-9]\)\([0-9]\)\([0-9]\).*-\1\2\3-"`
+	importeOfertado=`cat $OKDIR/$1 | grep $2 | sed "s-[^;]*;\(.*\)-\1-"`
+	nombreSuscriptor=`cat $MAEDIR/temaL_padron.csv | grep "$grupo;$numeroDeOrden" | sed "s-[^;]*;[^;]*;\([^;]*\).*-\1-"`
+	usuario=$USER
+	fecha=`date`
 	
-		local file="$PROCDIRV/$fechaValida.txt"
-		echo "$codigo;$fechaValida;$contratoFusionado;$grupo;$numeroDeOrden;$importeOfertado;$nombreSuscriptor;$usuario;$fecha" >> $file
-	fi
-
+	local file="$PROCDIRV/$fechaValida.txt"
+	echo "$codigo;$fechaValida;$contratoFusionado;$grupo;$numeroDeOrden;$importeOfertado;$nombreSuscriptor;$usuario;$fecha" >> $file
 }
 
 function inicializarBitacora {
+	#Si no existe la carpeta de aceptados la creo
+	#Puede que el usuario no haya ejecutado previamente RecibirOfertas, lo que generaria un error en este paso
+	if [ ! -d "$OKDIR" ]; then
+		mkdir "$OKDIR"
+	fi
+
 	cantFicheros=`ls "$OKDIR" | wc -l`
 	if [ $cantFicheros != "0" ]; then
 		$BINDIR/GrabarBitacora.sh "ProcesarOfertas" "Inicio de ProcesarOfertas - Cantidad de archivos a procesar: $cantFicheros"
