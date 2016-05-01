@@ -20,3 +20,37 @@ MoverArchivos
 * Si no se pasa el nombre del parametro se logea en el log de MoverArchivo.
 * En destino puede no pasarse  un nombre para el archivo por lo que se usara el nombre del archivo origen.
 * El nombre de archivo duplicado se define juntando el nombre del archivo mas un numero incremental que va desde el 0 hasta que sea unico.
+
+RecibirOfertas
+
+* Recibe del script que lo invoca la accion a realizar. Es decir, al ser un demonio, se le debe explicitar si debe iniciarse (start) o detenerse (stop). Estas acciones se realizan de forma automatica al ejecutarlo o detenerlo utilizando "LanzarProceso.sh" o "DetenerProceso.sh", no requiere una accion extra por parte del usuario.
+* Al iniciar crea una lista de concesionarios en base al archivo maestro "concesionarios.csv" para validar que el nombre del archivo a procesar contenga un nombre de concesionario existente.
+* Valida la extension y el nombre de los archivos que se encuentran en la carpeta "Arribados", todos los archivos que no cumplan con los requisitos se mueven a la carpeta de "Rechazados"
+* Se valida que la fecha del nombre del archivo a procesar sea una fecha valida. Aprovechando que el acto de adjudicación se realiza todos los meses, se validan las fechas de los archivos a procesar comparando este valor con la fecha de adjudicación del mes anterior al actual del sistema. Además, la fecha leida en el nombre del archivo se valida que sea menor o igual a la fecha del sistema.
+* El script se ejcuta indefinidamente luego de dormirse según el valor seteado en la configuración del sistema (generar_config.sh)
+* Luego de recorrer los archivos "Arribados", verifica que no haya novedades pendientes (es decir, archivos aceptados que deben ser procesados). En caso de que haya archivos aceptados y el script procesarOfertas.sh no se encuentre en ejecución, se ejecuta dicho script en background para que RecibirOfertas.sh no deje de ejecutarse ciclicamente. Si procesarOfertas.sh se encuentra en ejecución, se suspende su lanzamiento y se pospone para el proximo ciclo.
+
+ProcesarOfertas
+
+* Al iniciar verifica que todos los directorios necesarios para su funcionamiento sean validos y existan.
+* Procesa los archivos que fueron aceptados por recibirOfertas.sh en orden creciente segun su fecha, haciendo uso de un indice creado mediante otro script (indiceAceptados.pl).
+* Se verifica que un fichero no haya sido procesado anteriormente buscando su concidencia en nombre en la carpeta "Procesadas/Procesadas". En caso de encontrarse, se mueve el fichero en espera de ser procesado a la carpeta de "Rechazados"
+* Se valida que todos los registros del archivo a procesar sean validas, es decir, que cumplan con la estructura pedida. Caso contrario se rechazan. (Se hace mas robusto que lo pedido, que era solo validar la primera linea) Los archivos que no cumplen, se mueven al directorio de rechazados.
+* Se valida que el estado de grupo a procesar sea distinto a CERRADO, utilizando el archivo maestro "grupos.csv" para contrastar esta información.
+* Se valida que el contrato fusionado (grupo y numero de orden) exista en el padron de suscriptores (informacion obtenida del archivo maestro "temaL_padron.csv")
+* Se valida que se cumplan las condiciones de monto minimo y maximo establecidas para poder ofertar.
+* Por último se valida que el suscriptor pueda participar del acto de adjudicación.
+*  Los registros verificados se guardan en un archivo de texto plano (.txt) dentro de la carpeta "/procesados/validas" con el nombre de la proxima fecha de adjudicación. Guardando además la información establecida en la tabla de válidas del trabajo práctico.
+* Los registros rechazados se guardan en un archivo de texto plano (.rech) dentro de la carpeta "/procesados/rechazadas" con el nombre del concesionario al que pertenece el registro rechazado.
+* Por último se mueve el archivo procesado a "procesados/procesadas" para evitar que se procese en el proximo ciclo o llamada del script.
+
+IndiceAceptados.pl
+* Lee los archivos que se encuentran en la carpeta de "Aceptados" y devuelve un índice ordenado por la fecha según el nombre de cada uno de los archivos.
+
+
+
+
+
+
+
+
