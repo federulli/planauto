@@ -12,4 +12,4 @@ gzip -d *.gz
 chmod +x generar_config.sh
 ./generar_config.sh
  
-
+mkdir aceptados

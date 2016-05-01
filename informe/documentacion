@@ -44,6 +44,8 @@ ProcesarOfertas
 * Los registros rechazados se guardan en un archivo de texto plano (.rech) dentro de la carpeta "/procesados/rechazadas" con el nombre del concesionario al que pertenece el registro rechazado.
 * Por último se mueve el archivo procesado a "procesados/procesadas" para evitar que se procese en el proximo ciclo o llamada del script.
 
+
+Comandos Auxiliares:
 IndiceAceptados.pl
 * Lee los archivos que se encuentran en la carpeta de "Aceptados" y devuelve un índice ordenado por la fecha según el nombre de cada uno de los archivos.
 
