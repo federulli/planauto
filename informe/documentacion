@@ -44,6 +44,17 @@ ProcesarOfertas
 * Los registros rechazados se guardan en un archivo de texto plano (.rech) dentro de la carpeta "/procesados/rechazadas" con el nombre del concesionario al que pertenece el registro rechazado.
 * Por último se mueve el archivo procesado a "procesados/procesadas" para evitar que se procese en el proximo ciclo o llamada del script.
 
+GenerarSorteo
+
+* Verifica la existencia del archivo maestro "FechasAdj.csv" y verifica que el archivo no esté vacío. En caso de no existir el archivo, el archivo pasado por parametro no sea el correcto o el archivo "FechasAdj.csv" se encuentre vacío el script graba el log en el error y aborta su ejecución.
+* Verifica la existencia de las carpetas "$GRUPO/procesados" y "$GRUPO/procesados/sorteos" en caso de no existir alguna o ninguna las crea
+* Superadas todas las validaciones se busca en el archivo "FechasAdj.csv" cual es la próxima fecha de adjudicación. El script toma en cuenta la fecha del sistema para determinar cuál es la próxima fecha de adjudicación. 
+* En el caso de que en el archivo "FechasAdj.csv" se encuentran fechas invalidas como 30 de Febrero estás se descartan y se informa con un warning en el log
+* En el caso de que todas las fechas de adjudicación del archivo "FechasAdj.csv" sean anteriores a la fecha del sistema al momento de realizar el sorteo se informa el error en el log y el script aborta su ejecución
+* Una vez determinada la fecha correspondiente al próximo acto de adjudicación se genera un archivo de nombre "<id>_<fecha_de_adjudicacion>.srt" donde <id> es un identificar númerico para determinar el orden en que se realizaron los sorteos y <fecha_de_adjudicacion> es la fecha del próximo acto de adjudiación con formato "aaaammdd"
+* Luego se realiza el sorteo asignando a cada uno de 168 números de orden un número entre 1 y 168 en forma aleatoria.
+* Finalmente se graban los registros en el archivo de sorteos terminada esta operación se informa en el log la finalizacion del sorteo.
+
 
 Comandos Auxiliares:
 IndiceAceptados.pl

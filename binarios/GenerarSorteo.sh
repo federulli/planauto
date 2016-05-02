@@ -87,9 +87,8 @@ function realizarSorteo {
 		let "numeroDeOrden= numeroDeOrden+1"
 	done
 }
-
-verificarParametros "$@"
 iniciarLog
+verificarParametros "$@"
 verificarDirectorios
 realizarSorteo "$1"
 finalizarLog
