@@ -55,6 +55,17 @@ GenerarSorteo
 * Luego se realiza el sorteo asignando a cada uno de 168 números de orden un número entre 1 y 168 en forma aleatoria.
 * Finalmente se graban los registros en el archivo de sorteos terminada esta operación se informa en el log la finalizacion del sorteo.
 
+MostrarBitacora
+
+Parametro 1 : comando
+Parametro 2 (opcional) : string a buscar
+Parametro 3 (opcional) : donde buscar la string (usuario, fecha, comando, typo, mensaje)
+
+* Verifica si hay a menos un parametro.
+* Verifica si el archivo deseado existe.
+* Si solo hay un parametro muestra todo el archivo.
+* Si hay dos parametros muestra solo las bitacoras que contienen el segundo parametro.
+* Si hay tres parametros muestra solo las bitacoras que contienen el segundo parametro en el campo indicado por el tercero parametro.
 
 Comandos Auxiliares:
 IndiceAceptados.pl
