@@ -255,6 +255,7 @@ sub resultado_ganadores_por_sorteo{
 		my @grupos_ordenados = sort(@grupos);
 		$arch_salida = $id."_S_Grd".$grupos_ordenados[0]."_Grh".$grupos_ordenados[$#grupos_ordenados]."_".$fecha_adj;
 		open(SALIDA, ">$ENV{'INFODIR'}/$arch_salida");
+		print SALIDA $titulo;
 	}
 
 	@grupos_consultados_ordenados = sort(keys(%ganadores_por_grupo));
@@ -287,6 +288,7 @@ sub resultado_ganadores_por_licitacion{
 		my @grupos_ordenados = sort(@grupos);
 		$arch_salida = $id."_L_Grd".$grupos_ordenados[0]."_Grh".$grupos_ordenados[$#grupos_ordenados]."_".$fecha_adj;
 		open(SALIDA, ">$ENV{'INFODIR'}/$arch_salida");
+		print SALIDA $titulo;
 	}
 
 	@grupos_consultados_ordenados = sort(keys(%ganadores_por_grupo));
@@ -320,6 +322,7 @@ sub resultado_por_grupo{
 		if ($grabar) {
 			$arch_salida = $id."_Grupo".$grupo."_".$fecha_adj;
 			open(SALIDA, ">$ENV{'INFODIR'}/$arch_salida");
+			print SALIDA $titulo;
 		}
 		$resultado_sorteo = $grupo."-".$ganadores_por_sorteo{$grupo}[0]." S (".$ganadores_por_sorteo{$grupo}[1].")\n";
 		$resultado_licitacion = $grupo."-".$ganadores_por_licitacion{$grupo}[0]." L (".$ganadores_por_licitacion{$grupo}[2].")\n";
