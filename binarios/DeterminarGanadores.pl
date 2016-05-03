@@ -6,7 +6,7 @@
 sub obtener_nombre_archivo_sorteo {
       #Devuelve el nombre del archivo de sorteo que contanga el id pasado por parametro
       $id = @_[0];
-      opendir(SORTEOS, "$ENV{'PROCDIR'})/sorteos");
+      opendir(SORTEOS, "$ENV{'PROCDIR'}/sorteos");
       @files = readdir(SORTEOS);
       @files = grep /^$id/, @files;
       if ( scalar @files < 1) {
@@ -29,7 +29,7 @@ sub obtener_fecha_de_adjudicacion {
 sub obtener_nombre_archivo_licitacion{
       #Devuelve el nombre del archivo de licitacion que contanga la fecha de adjudicacion pasada por parametro
       $fecha_adj = @_[0];
-      opendir(VALIDAS, "$ENV{'PROCDIR'})/validas");
+      opendir(VALIDAS, "$ENV{'PROCDIR'}/validas");
       @files = readdir(VALIDAS);
       @files = grep /^$fecha_adj/, @files;
       if ( scalar @files < 1) {
@@ -50,7 +50,7 @@ sub obtener_grupos {
 	my @todos = grep /^\*grupos$/, @_;
 	my @grupos;
 	if (scalar @todos){
-		open(GRUPOS, "<$ENV{'MAEDIR'}/Grupos.csv");
+		open(GRUPOS, "<$ENV{'MAEDIR'}/grupos.csv");
 		while (my $grupo_en_arch = <GRUPOS>) {
 			@grupo_activo = grep /^\d{4};ABIERTO/, $grupo_en_arch;
 			if ($grupo_activo[0] ne ""){
@@ -73,7 +73,7 @@ sub obtener_grupos {
 		#Saco los grupos que no esten abiertos
 		if (scalar @grupos_por_parametro > 0){
 			my @grupos_activos;
-			open(GRUPOS, "<$ENV{'MAEDIR'}/Grupos.csv");
+			open(GRUPOS, "<$ENV{'MAEDIR'}/grupos.csv");
 			while (my $grupo_existente = <GRUPOS>){
 				@grupo_activo = grep /^\d{4};ABIERTO/, $grupo_existente;
 				if ($grupo_activo[0] ne ""){
@@ -246,7 +246,9 @@ sub resultado_ganadores_por_sorteo{
 
 	#Armo el titulo
 	my $fecha_adj = &obtener_fecha_de_adjudicacion($id);
-	$titulo = "Ganadores del Sorteo ".$id." de fecha ".$fecha_adj."\n\n";
+	my $fecha_salida = $fecha_adj;
+	$fecha_salida =~ s/(\d{4})(\d{2})(\d{2})/\3-\2-\1/;
+	$titulo = "Ganadores del Sorteo ".$id." de fecha ".$fecha_salida."\n\n";
 	print $titulo;
 
 	if ($grabar) {
@@ -276,7 +278,9 @@ sub resultado_ganadores_por_licitacion{
 
 	#Armo el titulo
 	my $fecha_adj = &obtener_fecha_de_adjudicacion($id);
-	$titulo = "Ganadores por Licitación ".$id." de fecha ".$fecha_adj."\n\n";
+	my $fecha_salida = $fecha_adj;
+	$fecha_salida =~ s/(\d{4})(\d{2})(\d{2})/\3-\2-\1/;
+	$titulo = "Ganadores por Licitación ".$id." de fecha ".$fecha_salida."\n\n";
 	print $titulo;
 
 	if ($grabar) {
@@ -306,7 +310,9 @@ sub resultado_por_grupo{
 
 	#Armo el titulo
 	my $fecha_adj = &obtener_fecha_de_adjudicacion($id);
-	$titulo = "Ganadores por Grupo en el acto de adjudicación de fecha ".$fecha_adj.", Sorteo: ".$id."\n\n";
+	my $fecha_salida = $fecha_adj;
+	$fecha_salida =~ s/(\d{4})(\d{2})(\d{2})/\3-\2-\1/;
+	$titulo = "Ganadores por Grupo en el acto de adjudicación de fecha ".$fecha_salida.", Sorteo: ".$id."\n\n";
 	print $titulo;
 
 	@grupos_consultados_ordenados = sort {$a <=> $b} (@grupos);
@@ -390,6 +396,9 @@ if ( $archivo eq "") {
 $g = 0;
 if (scalar @guardar_en_archivo) {
 	$g = 1;
+	if (not -d $ENV{'INFODIR'}){
+		mkdir($ENV{'INFODIR'});
+	}
 }
 
 @grupos = &obtener_grupos(@ARGV);
