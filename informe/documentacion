@@ -71,10 +71,13 @@ Comandos Auxiliares:
 IndiceAceptados.pl
 * Lee los archivos que se encuentran en la carpeta de "Aceptados" y devuelve un índice ordenado por la fecha según el nombre de cada uno de los archivos.
 
+Determinar Ganadores
 
-
-
-
-
+*Puede recibir n parámetro, el primero debe ser el id del sorteo.
+*Recibe todos los grupos por los que se desea consultar por parámetro.
+*Recibe la opción -a para ayuda y -g para guardar los resultados de las consultas.
+*No se ejecuta si el ambiente no fue inicializado, existe otro comando de DeterminarGanadores en ejcución o no existe el archivo del sorteo recibido por parametro.
+*Permite hacer consultas sobre los ganadores de los sorteos y licitaciones, para los grupos deseados.
+*Se pueden realizar tantas consultas como se desee sin salir del comando.
 
 
