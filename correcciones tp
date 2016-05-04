@@ -1,0 +1,7 @@
+* el readme no aclara que hay que ir a la carpeta binarios para ejecutar preparar ambiente
+* agregar el pid del proceso al log (arreglado)
+* diferencias en la cantidad de ofertas procesadas como validas (arreglado)
+* generar sorteo no graba el id en el log (arreglado)
+* al ejecutar determinar ganadores con el comando -g debería informar que no se agregó ningun grupo o ejecutarse para todos los grupos disponibles
+* definir hipotesis en procesar ofertas para determinar que hacer cuando hay dos ofertas iguales (?)
+
