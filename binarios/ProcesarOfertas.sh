@@ -147,7 +147,7 @@ function validarImporte {
 			primeraCondicion=true	
 		fi
 	validoMontoMaximo=$( echo "$importeOfertado<=$montoMaximo" | bc )
-		if [ $validoMontoMinimo -eq 0 ]; then
+		if [ $validoMontoMaximo -eq 0 ]; then
 			segundaCondicion=false
 	
 		else

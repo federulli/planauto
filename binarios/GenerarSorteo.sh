@@ -86,6 +86,7 @@ function realizarSorteo {
 		echo "$(printf "%03d\n" $numeroDeOrden);$numero" >> $rutaArchAdjudicaciones
 		let "numeroDeOrden= numeroDeOrden+1"
 	done
+	$BINDIR/GrabarBitacora.sh "GenerarSorteo" "Se realizo el sorteo con id $sorteoId" 
 }
 iniciarLog
 verificarParametros "$@"

@@ -185,6 +185,7 @@ function arrancar_recibir_ofertas {
 	if [ $arrancar == "si" ]; then
 			$BINDIR/LanzarProceso.sh "RecibirOfertas" "B"
 			mensaje="Recibir ofertas corriendo bajo el no.: `pgrep -f  RecibirOfertas.sh`"
+			$BINDIR/GrabarBitacora.sh "PrepararAmbiente" "$mensaje"
 			echo $mensaje
 		else
 			echo "Para ejecutar RecibirOfertas:"
