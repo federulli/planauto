@@ -284,6 +284,12 @@ sub resultado_ganadores_por_licitacion{
 	$titulo = "Ganadores por Licitación ".$id." de fecha ".$fecha_salida."\n\n";
 	print $titulo;
 
+	$cantidad_ganadores = keys(%ganadores_por_grupo);
+	if($cantidad_ganadores == 0){
+		print "No hubo ganadores por licitación para los grupos ingresados.\n\n";
+		return;
+	}
+
 	if ($grabar) {
 		my @grupos_ordenados = sort(@grupos);
 		$arch_salida = $id."_L_Grd".$grupos_ordenados[0]."_Grh".$grupos_ordenados[$#grupos_ordenados]."_".$fecha_adj;
@@ -325,10 +331,13 @@ sub resultado_por_grupo{
 			print SALIDA $titulo;
 		}
 		$resultado_sorteo = $grupo."-".$ganadores_por_sorteo{$grupo}[0]." S (".$ganadores_por_sorteo{$grupo}[1].")\n";
-		$resultado_licitacion = $grupo."-".$ganadores_por_licitacion{$grupo}[0]." L (".$ganadores_por_licitacion{$grupo}[2].")\n";
 		print $resultado_sorteo;
-		print $resultado_licitacion;
-		print "\n";
+		$hay_licitador = @ganadores_por_licitacion{$grupo};
+		if ($hay_licitador != 0) {
+			$resultado_licitacion = $grupo."-".$ganadores_por_licitacion{$grupo}[0]." L (".$ganadores_por_licitacion{$grupo}[2].")\n";
+			print $resultado_licitacion;
+		}
+		else{ print "No hubo ganador por licitación para el grupo $grupo.\n"; }		print "\n";
 		if ($grabar) {
 			print SALIDA $resultado_sorteo;
 			print SALIDA $resultado_licitacion;
@@ -390,10 +399,16 @@ Se debe ingresar el numero de la consulta que se desea realizar o 0 si se desea 
 # Verifico que exista el archivo 
 $id = shift(@ARGV);
 $archivo = &obtener_nombre_archivo_sorteo($id);
+$es_id = grep /^\d*$/, $id;
+if ( $es_id == 0 ) {
+	print "Es obligatorio que el primer parámetro sea el id del sorteo\n";
+	exit;
+}
 if ( $archivo eq "") {
 	print "No se encuentra el archivo de sorteo con id: $id\n";
 	exit;
 }
+
 # Verifico si tengo q guardar en archivo
 @guardar_en_archivo = grep /^-g$/, @ARGV;
 $g = 0;
@@ -413,8 +428,10 @@ while ( $opcion = <STDIN> ) {
 	chop($opcion);
 	last if $opcion eq $opciones{salir};
 	if ($opcion eq $opciones{resultado_general}) {&resultado_general_sorteo($g, $id);}
+	elsif (scalar @grupos == 0) {print "Es obligatorio ingresar algún grupo por parámetro para acceder a la opción $opcion\n\n";}
 	elsif ($opcion eq $opciones{ganadores_sorteo}) {&resultado_ganadores_por_sorteo($g, $id, @grupos);}
 	elsif ($opcion eq $opciones{ganadores_licitacion}) {&resultado_ganadores_por_licitacion($g, $id, @grupos);}
 	elsif ($opcion eq $opciones{resultado_por_grupo}) {&resultado_por_grupo($g, $id, @grupos);}
+	else {print "Esa no es una opción válida.\n\n";}
 	&presentar_menu;
 }
