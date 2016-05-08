@@ -44,6 +44,8 @@ ProcesarOfertas
 * Los registros rechazados se guardan en un archivo de texto plano (.rech) dentro de la carpeta "/procesados/rechazadas" con el nombre del concesionario al que pertenece el registro rechazado.
 * Por último se mueve el archivo procesado a "procesados/procesadas" para evitar que se procese en el proximo ciclo o llamada del script.
 
+* Se valida si un suscriptor ya posee una oferta valida procesada. En caso de no encontrarse su nombre en el archivo de suscriptores "/maestros/SuscriptoresProcesados.csv" (Archivo que se crea al ejecutar este script) la oferta se valida, caso contrario, se la rechaza aun cuando cumpla los otros requisitos. La hipotesis adoptada es que solo se valida la primer oferta encontrada para un suscriptor, cualquier otra oferta sera rechazada sin importar el importe ofertado.
+
 GenerarSorteo
 
 * Verifica la existencia del archivo maestro "FechasAdj.csv" y verifica que el archivo no esté vacío. En caso de no existir el archivo, el archivo pasado por parametro no sea el correcto o el archivo "FechasAdj.csv" se encuentre vacío el script graba el log en el error y aborta su ejecución.
