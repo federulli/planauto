@@ -50,7 +50,10 @@ function obtenerFechaAdjudicacion {
 	diaCorrespondienteAMesActual=`echo $fechaMesActual | sed "s-\([^\/]*\).*-\1-"`
 	diaDeHoy=`date +%d`
 
-	if [[ $diaCorrespondienteAMesActual -gt $diaDeHoy ]]; then
+	#$expr se usa porque -gt da error si la fecha es 01..09, necesito que elimine el 0 del principio para comparar
+	diaValido=`echo $(expr $diaDeHoy - 0 )`
+
+	if [[ $diaCorrespondienteAMesActual -gt $diaValido ]]; then
 		fechaAdjudicacion=`cat $MAEDIR/FechasAdj.csv | grep "$diaCorrespondienteAMesActual/$mesActual" | sed "s-\([^;]*\).*-\1-"`
 		#Fecha valida es en formato aaaammdd
 		fechaValida=`echo $fechaAdjudicacion | sed "s-\([^\/]*\)\/\([^\/]*\)\/\([^\/]*\).*-\3\2\1-"`
@@ -65,24 +68,47 @@ function obtenerFechaAdjudicacion {
 	fi
 }
 
+function validarSuscriptorUnico {
+	nombresSuscriptores=`cat $MAEDIR/SuscriptoresProcesados.csv | grep $1`
+	if [ -z "$nombresSuscriptores" ]; then
+		return 0 #La cadena esta vacia, no hay problema por aqui
+	else
+		return 1 #El nombre de suscriptor ya fue procesado, hay que descartar la oferta
+	fi
+}
+
 function verificarRegistro { # Fuente, contratoFusionado 
 	codigo=`echo $1 | sed "s-\([^_]*\).*-\1-"`
 	
-	#Seteo la fecha valida del proximo acto de adjudicacion $fechaValida (formato aaaammdd)
-	obtenerFechaAdjudicacion
-
-	cantidadDeOfertasValidas=$((cantidadDeOfertasValidas+1))
-
-	contratoFusionado=$2
-	grupo=`echo $2 | sed "s-\([0-9]\)\([0-9]\)\([0-9]\)\([0-9]\).*-\1\2\3\4-"`
-	numeroDeOrden=`echo $2 | sed "s-[0-9][0-9][0-9][0-9]\([0-9]\)\([0-9]\)\([0-9]\).*-\1\2\3-"`
-	importeOfertado=`cat $OKDIR/$1 | grep $2 | sed "s-[^;]*;\(.*\)-\1-"`
+	if [ ! -f "$MAEDIR/SuscriptoresProcesados.csv" ]; then
+		> $MAEDIR/SuscriptoresProcesados.csv
+	fi
 	nombreSuscriptor=`cat $MAEDIR/temaL_padron.csv | grep "$grupo;$numeroDeOrden" | sed "s-[^;]*;[^;]*;\([^;]*\).*-\1-"`
-	usuario=$USER
-	fecha=`date`
+	validarSuscriptorUnico $nombreSuscriptor
+
+	if [ $? = "0" ]; then
+		#Seteo la fecha valida del proximo acto de adjudicacion $fechaValida (formato aaaammdd)
+		obtenerFechaAdjudicacion
+
+		cantidadDeOfertasValidas=$((cantidadDeOfertasValidas+1))
+
+		contratoFusionado=$2
+		grupo=`echo $2 | sed "s-\([0-9]\)\([0-9]\)\([0-9]\)\([0-9]\).*-\1\2\3\4-"`
+		numeroDeOrden=`echo $2 | sed "s-[0-9][0-9][0-9][0-9]\([0-9]\)\([0-9]\)\([0-9]\).*-\1\2\3-"`
+		importeOfertado=`cat $OKDIR/$1 | grep $2 | sed "s-[^;]*;\(.*\)-\1-"`
+
+		usuario=$USER
+		fecha=`date`
 	
-	local file="$PROCDIRV/$fechaValida.txt"
-	echo "$codigo;$fechaValida;$contratoFusionado;$grupo;$numeroDeOrden;$importeOfertado;$nombreSuscriptor;$usuario;$fecha" >> $file
+		local file="$PROCDIRV/$fechaValida.txt"
+		echo "$codigo;$fechaValida;$contratoFusionado;$grupo;$numeroDeOrden;$importeOfertado;$nombreSuscriptor;$usuario;$fecha" >> $file
+
+		#Agrego el suscriptor al archivo de suscriptores unicos
+		echo $nombreSuscriptor >> /$MAEDIR/SuscriptoresProcesados.csv
+	else
+		motivo="El suscriptor $nombreSuscriptor ya posee una oferta valida procesada"
+		rechazarRegistro $1 "$motivo" $2
+	fi
 }
 
 function inicializarBitacora {
