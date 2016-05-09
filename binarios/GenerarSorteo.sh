@@ -1,30 +1,15 @@
 #!/bin/bash
 function validarArchivo {
-#primero verifico el nombre
-	archivo="$1"
-	if [ "$archivo" != "$MAEDIR/FechasAdj.csv" ]; then
-		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "Nombre de archivo de adjudicacion invalido" "ERR"
-		exit 1
-	fi		
 #verifico que el archivo exista y no este vacio
-	if [ ! -f "$archivo" ]; then
+	if [ ! -f "$MAEDIR/FechasAdj.csv" ]; then
 		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "No existe archivo de adjudicaciones" "ERR"		
 		exit 1
 	else
-		if [ ! -s "$archivo" ]; then
+		if [ ! -s "$MAEDIR/FechasAdj.csv" ]; then
 		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "El archivo de adjudicaciones esta vacio" "ERR"
 		exit 1
 		fi
 	fi		
-}
-
-function verificarParametros {
-	if [ $# -lt 1 ]; then
-		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "Cantidad de parametros incorrecta" "ERR"
-		exit 1
-	else
-		validarArchivo "$1"
-	fi
 }
 
 function iniciarLog {
@@ -37,10 +22,11 @@ function finalizarLog {
 
 function verificarDirectorios {
 #verifico si existe la carpeta de ofertas procesadas y la de sorteos
-#si falta alguna las creo
+#si falta alguna las creo	
 	if [ ! -d "$PROCDIR" ]; then
 		mkdir "$PROCDIR"
 	fi
+
 	if [ ! -d "$PROCDIR/sorteos" ]; then
 			mkdir "$PROCDIR/sorteos"	
 	fi 		
@@ -62,7 +48,7 @@ function realizarSorteo {
 		else
 			$BINDIR/GrabarBitacora.sh "GenerarSorteo" "El archivo maestro de adjudicaciones presenta la siguiente fecha de adjudicacion invalida $linea " "WAR"
 		fi		
-	done < $1
+	done < "$MAEDIR/FechasAdj.csv"
 
 	if [ $seguir = true ]; then
 		$BINDIR/GrabarBitacora.sh "GenerarSorteo" "No hay fechas de adjudicacion posteriores al dia de la fecha" "ERR"
@@ -86,10 +72,10 @@ function realizarSorteo {
 		echo "$(printf "%03d\n" $numeroDeOrden);$numero" >> $rutaArchAdjudicaciones
 		let "numeroDeOrden= numeroDeOrden+1"
 	done
-	$BINDIR/GrabarBitacora.sh "GenerarSorteo" "Se realizo el sorteo con id $sorteoId" 
+	$BINDIR/GrabarBitacora.sh "GenerarSorteo" "Se realizo el sorteo con id $sorteoId" 	
 }
 iniciarLog
-verificarParametros "$@"
+validarArchivo
 verificarDirectorios
-realizarSorteo "$1"
+realizarSorteo
 finalizarLog
